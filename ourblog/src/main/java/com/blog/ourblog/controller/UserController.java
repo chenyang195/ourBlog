@@ -31,7 +31,9 @@ public class UserController {
         User user = new User();
         user.setUsername(username);
         Object credentials = password;
-        user.setPassword(MD5Encrypt.encrypt(username,credentials).toString());
+        String pass = MD5Encrypt.encrypt(username,credentials).toString();
+        System.out.println(pass);
+        user.setPassword(pass);
         user.setTime(new java.sql.Timestamp(new java.util.Date().getTime()));
         //尝试注册
         Integer result = userService.addUser(user);

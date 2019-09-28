@@ -1,7 +1,9 @@
 package com.blog.ourblog.config;
 
 import com.blog.ourblog.realm.UserRealm;
+
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -64,9 +66,13 @@ public class ShiroConfig {
      * 创建Realm
      */
     @Bean(name ="userRealm" )
-    public UserRealm getRealm(){
-        return new UserRealm();
+    public UserRealm getRealm(HashedCredentialsMatcher hashedCredentialsMatcher){
+        UserRealm userRealm= new UserRealm();
+        //配置加密
+        userRealm.setCredentialsMatcher(hashedCredentialsMatcher);
+        return userRealm;
     }
+
 
     @Bean(name = "hashedCredentialsMatcher")
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
@@ -77,6 +83,10 @@ public class ShiroConfig {
         hashedCredentialsMatcher.setHashIterations(1024);
         return hashedCredentialsMatcher;
     }
+
+
+
+
 
 
 }
