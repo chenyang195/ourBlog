@@ -5,12 +5,23 @@
     <select id="findByUsername" parameterType="String" resultType="com.blog.ourblog.entity.User">
     SELECT
     `id`,
-     `name`as username,
-    `password`
+    username,
+    `password`,
+    update_time as time
     FROM
-    `user` where name = #{username}
+    `t_user` where username = #{username}
 
 
     </select>
+    <insert id="insertUser" parameterType="com.blog.ourblog.entity.User" >
+        INSERT INTO t_user
+        (username,
+        password,
+        create_time)
+        VALUES
+        (#{user.username},
+        #{user.password},
+        #{user.time})
+    </insert>
 
 </mapper>

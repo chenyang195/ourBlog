@@ -1,5 +1,8 @@
 package com.blog.ourblog.controller;
 
+import com.blog.ourblog.entity.User;
+import com.blog.ourblog.service.UserService;
+import com.blog.ourblog.util.MD5Encrypt;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -7,6 +10,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,31 +19,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
 
+
 @Controller
 public class UserController {
-    @RequestMapping("/add")
-    public String add(){
-        return "user/add";
-    }
+    @Autowired
+    private UserService userService;
 
-    @RequestMapping("/update")
-    public String update(){
-        return "user/update";
-    }
 
-    @RequestMapping("/test")
-    public String test(){
-        return "test";
-    }
-
-    @RequestMapping("/login")
-    public String login(){
-        return "login";
-    }
-
-    @RequestMapping("/noAuth")
-    public String noauth(){
-        return "noAuth";
+    @RequestMapping("/reg")
+    public String reg(@RequestParam("username")String username, @RequestParam("password")String password,Model model){
+        User user = new User();
+        user.setUsername(username);
+        Object credentials = password;
+        user.setPassword(MD5Encrypt.encrypt(username,credentials).toString());
+        user.setTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+        //尝试注册
+        Integer result = userService.addUser(user);
+        if(result.equals(-1)){
+            model.addAttribute("msg","用户名已存在！");
+            return "/register";
+        }
+         model.addAttribute("msg","注册成功请登录！");
+         return "/login";
     }
 
     @RequestMapping("/log")

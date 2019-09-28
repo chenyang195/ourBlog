@@ -1,6 +1,7 @@
 package com.blog.ourblog.config;
 
 import com.blog.ourblog.realm.UserRealm;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +33,8 @@ public class ShiroConfig {
         Map<String,String> filterMap = new LinkedHashMap<>();
         filterMap.put("/test","anon");
         filterMap.put("/log","anon");
+        filterMap.put("/reg","anon");
+        filterMap.put("/register","anon");
 
         filterMap.put("/update","authc");
         filterMap.put("/logout","authc");
@@ -64,4 +67,16 @@ public class ShiroConfig {
     public UserRealm getRealm(){
         return new UserRealm();
     }
+
+    @Bean(name = "hashedCredentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        // 采用MD5方式加密
+        hashedCredentialsMatcher.setHashAlgorithmName("MD5");
+        // 设置加密次数
+        hashedCredentialsMatcher.setHashIterations(1024);
+        return hashedCredentialsMatcher;
+    }
+
+
 }

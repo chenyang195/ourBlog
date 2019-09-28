@@ -1,11 +1,26 @@
 package com.blog.ourblog.entity;
 
 
+import org.apache.ibatis.annotations.Param;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 public class User {
     private Integer id;
     private String username;
     private String password;
+    private Timestamp time;
+
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
     @Override
     public String toString() {
         return "User{" +
