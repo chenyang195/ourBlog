@@ -27,6 +27,8 @@ public class UserServiceimpl implements UserService {
         if (userMapper.findByUsername(user.getUsername())!=null){
             return -1;
         }
-        return  userMapper.insertUser(user);
+        Integer result =  userMapper.insertUser(user);
+
+        return result;
     }
 }

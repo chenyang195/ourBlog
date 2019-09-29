@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.ourblog.mapper.UserMapper">
+    <select id="findActionByActionId" parameterType="int" resultType="com.blog.ourblog.entity.Action">
+    SELECT
+    `action_id`as actionId,
+    action_name as actionName
+    FROM
+    `t_action` where action_id = #{actionId}
+    </select>
+
+    <select id="findActionIdByRoleId" parameterType="int" resultType="Integer">
+    SELECT
+    `action_id`,
+    FROM
+    `role_action` where role_id = #{roleId}
+    </select>
+
+</mapper>
