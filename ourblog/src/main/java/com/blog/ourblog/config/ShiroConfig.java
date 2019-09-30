@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,12 +34,20 @@ public class ShiroConfig {
          *      role:该资源必须得到角色权限才可以访问
          */
         Map<String,String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/test","anon");
+        //放行静态资源
+        filterMap.put("/layui/**","anon");
+
+        filterMap.put("/index","anon");
+        filterMap.put("/getVerificationCode","anon");
         filterMap.put("/log","anon");
         filterMap.put("/reg","anon");
+        filterMap.put("/login","anon");
         filterMap.put("/register","anon");
+        filterMap.put("/favicon.ico","anon");
 
-        filterMap.put("/update","authc");
+
+
+
         filterMap.put("/logout","authc");
 
         //授权过滤器
@@ -60,6 +69,7 @@ public class ShiroConfig {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //设置Realm
         securityManager.setRealm(userRealm);
+
         return securityManager;
     }
     /**

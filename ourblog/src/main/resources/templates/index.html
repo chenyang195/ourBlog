@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>导航</title>
+		<link rel="stylesheet" href="/layui/css/layui.css" />
+		<script src="/layui/layui.js"></script>
+		<script type="text/javascript">
+			layui.use(["element",function(){
+				var element = layui.element;
+
+			}])
+			
+			
+
+
+			/*layui.use(['jquery'], function(){
+			      var $ = jQuery = layui.$;
+			      $("#logcheck").html("<li class='layui-nav-item' lay-unselect=''><a href='javascript:;'><img src='//t.cn/RCzsdCq' class='layui-nav-img'>我</a><dl class='layui-nav-child'><dd><a href=''>个人中心</a></dd><dd><a href=''>私信</a></dd><dd><a href=''>回复我的</a></dd><dd><a href=''>系统消息</a></dd><dd><a href=''>退出登录</a></dd></dl></li>");
+					layui.element.init();
+
+
+			});*/
+
+			function intext()
+			{
+				layui.use(['jquery'], function(){
+					var $ = jQuery = layui.$;
+					$("body").append("<div onclick='window.open('www.baidu.com')'><h2>hahah</h2><p>足够带u安徽的机会啊会丢啊好低啊就会嗲家打底裤啊打卡机大家都看按时打卡大卡打卡的 后代i很对啊 阿文回家我埃德加傲娇打开的 家啊大家哦阿斯顿哦阿姐就按键都i阿娇 </p></div>");
+					
+				  	ayui.element.init();				
+				});
+			}
+		</script>
+	</head>
+	<body onload=intext()>
+		 
+		<ul class="layui-nav">
+		  <li class="layui-nav-item layui-this"><a href="">首页</a></li>
+		  <li class="layui-nav-item"><a href="">最热文章</a></li>
+		  <li class="layui-nav-item"><a href="">最新发布</a></li>
+		  
+		  <li class="layui-nav-item layui-layout-right" id="logcheck">
+			  <!--<div class="layui-icon layui-icon-loading-1 layui-icon
+			  layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 28px;">-->
+			  <a href="/login">登录</a>
+
+		  </li>
+			
+		</ul>
+		
+	</body>
+	
+</html>

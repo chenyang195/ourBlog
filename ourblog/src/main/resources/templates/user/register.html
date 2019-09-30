@@ -1,20 +1,57 @@
 <!DOCTYPE html>
+<html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>注册</title>
-
-
+    <title>登陆</title>
+    <link rel="stylesheet" href="layui/css/layui.css"/>
+    <link rel="stylesheet" href="css/login.css"/>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script type="text/javascript">
+    </script>
 </head>
 <body>
-<h3 th:text="${msg}"></h3>
-<form action="/reg">
+<div id="container">
+    <div></div>
+    <div class="admin-login-background">
 
-    用户名: <input type="text" name="username" ><br>
-    密码: <input type="password" name="password" ><br>
-    确认密码: <input type="password" name="passwordcheck" ><br>
-    <button type="submit" >注册</button>
+        <form class="layui-form" action="/reg">
+            <div>
+                <i class="layui-icon layui-icon-username admin-icon admin-icon-username"></i>
+                <input type="text" name="username" placeholder="请输入用户名"
+                       autocomplete="off"
+                       class="layui-input admin-input admin-input-username">
+            </div>
+            <div>
+            <i class="layui-icon layui-icon-password admin-icon admin-icon-password"></i>
+            <input type="password" name="password"
+                   placeholder="请输入密码"
+                   autocomplete="off"
+                   class="layui-input admin-input">
+        </div>
+            <div>
+                <i class="layui-icon layui-icon-password admin-icon admin-icon-password"></i>
+                <input type="password" name="password1"
+                       placeholder="请再次输入密码"
+                       autocomplete="off"
+                       class="layui-input admin-input">
+            </div>
+            <div>
+                <input type="text" name="verify"
+                       placeholder="验证码(区分大小写)"
+                       autocomplete="off"
+                       class="layui-input admin-input admin-input-verify">
+                <img class="admin-captcha" id="img1"src="/getVerificationCode"
+                     onclick='this.src=this.src+"?"+Math.random()'>
+            </div>
+            <button class="layui-btn admin-button" lay-submit lay-filter="formDemo">注册</button>
+            <h3 th:text="${msg}"></h3>
+            <h3 id="information">已有账号？点击<a href="/login">这里</a>登录 </h3>
 
-</form>
+
+        </form>
+    </div>
+</div>
+
 </body>
 </html>
