@@ -5,8 +5,11 @@ import com.blog.ourblog.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
+
 @Mapper
 public interface UserMapper {
     public User findByUsername(@Param("username") String username);
     public Integer insertUser(@Param("user") User user);
+    public Integer flushUserLogin(@Param("location") String location,@Param("timestamp") Timestamp timestamp,@Param("username")String username);
 }

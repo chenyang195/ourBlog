@@ -1,10 +1,7 @@
 package com.blog.ourblog.entity;
 
 
-import org.apache.ibatis.annotations.Param;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 public class User {
@@ -12,6 +9,15 @@ public class User {
     private String username;
     private String password;
     private Timestamp time;
+    private String recentLocation;
+
+    public String getRecentLocation() {
+        return recentLocation;
+    }
+
+    public void setRecentLocation(String recentLocation) {
+        this.recentLocation = recentLocation;
+    }
 
     public Timestamp getTime() {
         return time;

@@ -39,40 +39,40 @@ public class UserController {
 
     @RequestMapping("/reg")
     public String reg(@RequestParam("username")String username, @RequestParam("password")String password,@RequestParam("password1")String password1, @RequestParam("verify")String verify,Model model,HttpServletRequest request){
-        System.out.println("执行到这里了");
+
         HttpSession session = request.getSession();
-        System.out.println("执行到这里了1");
+        ;
         if (session.getAttribute("verValue")==null){
-            System.out.println("执行到这里了2");
-            return "/register";
+
+            return "user/register";
 
         }
         String verValue = session.getAttribute("verValue").toString();
-        System.out.println("执行到这里了3");
+
         if(!password.equals(password1)){
-            System.out.println("执行到这里了4");
+
             model.addAttribute("msg","两次密码不一致");
-            return "/register";
+            return "user/register";
         }
-        System.out.println("执行到这里了5");
+
         if(!(verify.equalsIgnoreCase(verValue))){
             model.addAttribute("msg","验证码错误");
-            System.out.println("执行到这里了6");
-            return "/register";
+
+            return "user/register";
         }
-        System.out.println("执行到这里了7");
+
         User user = new User();
         user.setUsername(username);
         Object credentials = password;
         String pass = MD5Encrypt.encrypt(username,credentials).toString();
-        System.out.println(pass);
+
         user.setPassword(pass);
         user.setTime(new java.sql.Timestamp(new java.util.Date().getTime()));
         //尝试注册
         Integer result = userService.addUser(user);
         if(result.equals(-1)){
             model.addAttribute("msg","用户名已存在！");
-            return "/register";
+            return "user/register";
         }
          model.addAttribute("msg","注册成功请登录！");
          return "/login";
@@ -80,6 +80,8 @@ public class UserController {
 
     @RequestMapping("/log")
     public String log(@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("verify")String verify, Model model, HttpServletRequest request){
+        String addr = request.getRemoteAddr();
+        System.out.println(addr);
         HttpSession session = request.getSession();
         if (session.getAttribute("verValue")==null){
             return "/login";
@@ -115,8 +117,11 @@ public class UserController {
             return "/login";
         }
         if (savedRequest == null || savedRequest.getRequestUrl() == null) {
-            return "test";
+            return "index";
         }
+        //更新登录记录
+        addr = request.getRemoteAddr();
+
         return "redirect:" + savedRequest.getRequestUrl();
 
     }

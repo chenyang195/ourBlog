@@ -37,7 +37,7 @@ public class ShiroConfig {
         //放行静态资源
         filterMap.put("/layui/**","anon");
 
-        filterMap.put("/index","anon");
+        filterMap.put("/","anon");
         filterMap.put("/getVerificationCode","anon");
         filterMap.put("/log","anon");
         filterMap.put("/reg","anon");

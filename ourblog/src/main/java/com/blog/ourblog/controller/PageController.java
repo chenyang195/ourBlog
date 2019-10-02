@@ -37,7 +37,7 @@ public class PageController {
         return "noAuth";
     }
 
-    @RequestMapping("/index")
+    @RequestMapping("/")
     public String index(){
         return "index";
     }

@@ -31,4 +31,10 @@ public class UserServiceimpl implements UserService {
 
         return result;
     }
+
+    @Override
+    public Integer updateLocation(String location, String username) {
+
+        return null;
+    }
 }

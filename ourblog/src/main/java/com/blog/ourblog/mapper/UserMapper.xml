@@ -23,5 +23,11 @@
         #{user.password},
         #{user.time})
     </insert>
+    <update id="flushUserLogin">
+        UPDATE t_user
+        SET recent_location = #{location},
+         recent_login_time = #{timestamp}
+        WHERE username = #{username}
+    </update>
 
 </mapper>
