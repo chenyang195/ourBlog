@@ -12,7 +12,7 @@
 
     <select id="findActionIdByRoleId" parameterType="int" resultType="Integer">
     SELECT
-    `action_id`,
+    `action_id`
     FROM
     `role_action` where role_id = #{roleId}
     </select>

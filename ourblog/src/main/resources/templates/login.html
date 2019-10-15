@@ -6,43 +6,80 @@
     <title>登陆</title>
     <link rel="stylesheet" href="layui/css/layui.css"/>
     <link rel="stylesheet" href="css/login.css"/>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 
+    <script type="text/javascript">
+        function check() {
+            var username = $("#username").val();
+            if (username==""){
+                alert("请输入用户名！")
+                return false;
+            }
+            var p1 =$("#p1").val();
+            if (p1==""){
+                alert("请输入密码！")
+                return false;
+            }
+
+            var v1 =$("#v1").val();
+            if (v1==""){
+                alert("请输入验证码！")
+                return false;
+            }
+            return true;
+        }
+    </script>
 
 </head>
 <body >
 <div id="container">
     <div></div>
     <div class="admin-login-background">
-        <h3 th:text="${msg}"></h3>
-        <form class="layui-form" action="/log">
+        <!--<h3 th:text="${msg}"></h3>-->
+        <form class="layui-form" action="/log" method="post">
             <div>
                 <i class="layui-icon layui-icon-username admin-icon admin-icon-username"></i>
-                <input type="text" name="username" placeholder="请输入用户名"
+                <input type="text" name="username" placeholder="请输入用户名" id="username"
                        autocomplete="off"
                        class="layui-input admin-input admin-input-username">
             </div>
             <div>
                 <i class="layui-icon layui-icon-password admin-icon admin-icon-password"></i>
-                <input type="password" name="password"
+                <input type="password" name="password" id="p1"
                        placeholder="请输入密码"
                        autocomplete="off"
                        class="layui-input admin-input">
             </div>
             <div>
-                <input type="text" name="verify"
-                       placeholder="请输入验证码"
+                <input type="text" name="verify" id="v1"
+                       placeholder="验证码(区分大小写)"
                        autocomplete="off"
                        class="layui-input admin-input admin-input-verify">
                 <img class="admin-captcha" id="img1"src="/getVerificationCode"
                      onclick='this.src=this.src+"?"+Math.random()'>
             </div>
-            <button class="layui-btn admin-button" lay-submit lay-filter="formDemo">登陆</button>
+            <div style="text-align: right;vertical-align: middle;height: 20px">
 
-            <h3 id="information">没有账号？点击<a href="/register">这里</a>注册 </h3>
+                <input type="checkbox" name="remeberme" lay-skin="primary"
+                       style="display: inline"  checked="true" >记住我
+            </div>
+
+            <button class="layui-btn admin-button" lay-submit lay-filter="formDemo"onclick="return check()">登陆</button>
+
+            <h3 id="information">没有账号？<a href="/register">点击这里注册 </a></h3>
 
 
         </form>
     </div>
 </div>
 </body>
+<script th:inline="javascript">
+
+    var msg= [[${msg}]];
+    if (msg != null){
+        alert(msg);
+    }
+
+
+</script>
 </html>

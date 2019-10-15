@@ -1,12 +1,8 @@
 package com.blog.ourblog.controller;
 
-import com.blog.ourblog.util.VerificationCodeUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.io.IOException;
-import java.util.Map;
 
 @Controller
 public class PageController {
@@ -20,9 +16,9 @@ public class PageController {
         return "user/update";
     }
 
-    @RequestMapping("/test")
+    @RequestMapping("/admin")
     public String test(){
-        return "test";
+        return "admin";
     }
 
     @RequestMapping("/login")
@@ -46,4 +42,12 @@ public class PageController {
     public String register(){
         return "user/register";
     }
+
+    @RequestMapping("/editor")
+    public String editor(){
+        return "editor";
+    }
+
+
+
 }

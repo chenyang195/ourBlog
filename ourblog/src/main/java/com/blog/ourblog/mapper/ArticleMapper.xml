@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.ourblog.mapper.ArticleMapper">
+    <insert id="addArticle" parameterType="com.blog.ourblog.entity.Article">
+        insert into t_article
+        (username,
+        title,
+        synopsis,
+        content,
+        update_time)
+        values
+        (#{article.userName},
+        #{article.title},
+        #{article.synopsis},
+        #{article.content},
+        #{article.updateTime})
+
+    </insert>
+    <select id="getArticleNumber" resultType="int">
+        select
+        count(*)
+        from
+        t_article
+        where is_ban = 0
+     </select>
+    <select id="getArticle" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        content,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+        from
+        t_article
+        where
+        id = {articleId}
+
+    </select>
+
+
+    <select id="getArticleInformation" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+        from
+        t_article
+        where
+        id = {articleId}
+
+    </select>
+    <select id="getStickArticleInformation" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+        from
+        t_article
+        where
+        is_stick = 1 and is_ban = 0
+        limit
+        #{pageHead},#{pageSize}
+
+    </select>
+    <select id="getStickArticleNumber" resultType="int">
+        select
+        count(*)
+        from
+        t_article
+        where
+        is_stick = 1 and is_ban = 0
+    </select>
+    <select id="getHotArticleInformation" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        (star_num*5+praise_num-tread_num+hot_index) as finalIndex,
+        is_ban as isBan,
+        is_stick as isStick
+        from
+        t_article
+        where
+        is_ban = 0
+        order by
+        finalIndex desc
+        limit
+        #{pageHead},#{pageSize}
+
+    </select>
+    <select id="getNewArticleInformation" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+
+        from
+        t_article
+        where
+        is_ban = 0
+        order by
+        updateTime desc
+        limit
+        #{pageHead},#{pageSize}
+
+    </select>
+    <select id="getBanArticleNumber">
+        select
+        count(*)
+        from
+        t_article
+        where
+        is_ban = 1
+    </select>
+    <select id="getBanArticleInformation" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+
+        from
+        t_article
+        where
+        is_ban = 1
+        limit
+        #{pageHead},#{pageSize}
+
+    </select>
+    <update id="updateArticle">
+        UPDATE t_article
+         SET
+         title = #{article.title},
+        synopsis = #{article.synopsis},
+        content = #{article.content},
+        update_time = #{article.updateTime}
+
+        WHERE
+        article_id = #{article.articleId}
+
+    </update>
+    <update id="banArticle">
+        UPDATE t_article
+         SET
+         is_ban = 1;
+
+        WHERE
+        article_id = #{articleId}
+
+    </update>
+    <update id="stickArticle">
+        UPDATE t_article
+         SET
+         is_stick = 1;
+
+        WHERE
+        article_id = #{articleId}
+
+    </update>
+    <update id="cancelBanArticle">
+        UPDATE t_article
+         SET
+         is_ban = 0;
+
+        WHERE
+        article_id = #{articleId}
+
+    </update>
+    <update id="cancelStickArticle">
+        UPDATE t_article
+         SET
+         is_stick = 0;
+
+        WHERE
+        article_id = #{articleId}
+
+    </update>
+
+
+</mapper>

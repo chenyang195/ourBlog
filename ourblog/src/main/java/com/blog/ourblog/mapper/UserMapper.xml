@@ -7,7 +7,9 @@
     `id`,
     username,
     `password`,
-    update_time as time
+    image_url as imageURL,
+    recent_location as recentLocation,
+    recent_login_time as time
     FROM
     `t_user` where username = #{username}
 
@@ -17,11 +19,13 @@
         INSERT INTO t_user
         (username,
         password,
-        create_time)
+        create_time,
+        image_url)
         VALUES
         (#{user.username},
         #{user.password},
-        #{user.time})
+        #{user.time},
+        #{user.imageURL})
     </insert>
     <update id="flushUserLogin">
         UPDATE t_user

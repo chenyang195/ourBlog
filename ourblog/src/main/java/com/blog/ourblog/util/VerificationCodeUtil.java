@@ -104,11 +104,11 @@ public class VerificationCodeUtil {
         // 将四位数字的验证码保存到Session中。
         code = randomCode.toString();
 
-        //生成文件
+        /*//生成文件
         UUID uuid = UUID.randomUUID();
         String str = uuid.toString();
         String uuidStr = str.replace("-", "");
-        //String path ="src/main/resources/static/picture/profilephoto/"+uuidStr + ".png";
+        //String path ="src/main/resources/static/picture/profilephoto/"+uuidStr + ".png";*/
 
 
 

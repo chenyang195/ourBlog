@@ -1,54 +1,86 @@
-<!DOCTYPE html>
-<html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf"
+
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
 	<head>
 		<meta charset="utf-8">
-		<title>导航</title>
-		<link rel="stylesheet" href="/layui/css/layui.css" />
-		<script src="/layui/layui.js"></script>
+		<title>首页</title>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="css/showArticle.css" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="layui/layui.js"></script>
 		<script type="text/javascript">
 			layui.use(["element",function(){
 				var element = layui.element;
 
 			}])
-			
-			
+			function getHomePage(){
+				var pageHTML = "";
+
+				$.ajax({
+					url:"/getHomePage",
+					async:false,
+					success: function (data) {
+						if (data != "") {
+							var pageContent =  JSON.parse(data);
+
+							if(pageContent!=null){
 
 
-			/*layui.use(['jquery'], function(){
-			      var $ = jQuery = layui.$;
-			      $("#logcheck").html("<li class='layui-nav-item' lay-unselect=''><a href='javascript:;'><img src='//t.cn/RCzsdCq' class='layui-nav-img'>我</a><dl class='layui-nav-child'><dd><a href=''>个人中心</a></dd><dd><a href=''>私信</a></dd><dd><a href=''>回复我的</a></dd><dd><a href=''>系统消息</a></dd><dd><a href=''>退出登录</a></dd></dl></li>");
-					layui.element.init();
+								var stickPageNum = pageContent[''];
+								var aryicleNum = pageContent.articleNum;
 
+								var stick = pageContent.articleMap.stick;
+								alert(JSON.stringify(stick));
+								pageHTML+="<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>置顶文章</p></div>"
+								$.each(stick,function(i,val){
+									pageHTML +="<div class='article-container' ><div class='margin-around' > <div class='article-title'> <a href='https://www.baidu.com'> <p class='article-title-text' >"+val['title']+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='#'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
+								});
+								pageHTML +="</div>";
+								$("body").append(pageHTML)
+							}
 
-			});*/
-
-			function intext()
-			{
-				layui.use(['jquery'], function(){
-					var $ = jQuery = layui.$;
-					$("body").append("<div onclick='window.open('www.baidu.com')'><h2>hahah</h2><p>足够带u安徽的机会啊会丢啊好低啊就会嗲家打底裤啊打卡机大家都看按时打卡大卡打卡的 后代i很对啊 阿文回家我埃德加傲娇打开的 家啊大家哦阿斯顿哦阿姐就按键都i阿娇 </p></div>");
-					
-				  	ayui.element.init();				
+						}
+					}
 				});
+
 			}
 		</script>
+
+
 	</head>
-	<body onload=intext()>
+	<body onload=getHomePage()>
 		 
 		<ul class="layui-nav">
-		  <li class="layui-nav-item layui-this"><a href="">首页</a></li>
-		  <li class="layui-nav-item"><a href="">最热文章</a></li>
-		  <li class="layui-nav-item"><a href="">最新发布</a></li>
+		  	<li class="layui-nav-item layui-this"><a href="">首页</a></li>
+			<li class="layui-nav-item"><a href="">最热文章</a></li>
+		  	<li class="layui-nav-item"><a href="">最新发布</a></li>
+			<li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
 		  
-		  <li class="layui-nav-item layui-layout-right" id="logcheck">
-			  <!--<div class="layui-icon layui-icon-loading-1 layui-icon
-			  layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 28px;">-->
-			  <a href="/login">登录</a>
-
-		  </li>
-			
 		</ul>
+		<ul class="layui-nav layui-layout-right">
+			<div shiro:guest="">
+				<li class="layui-nav-item"><a href="/register">注册</a></li>
+				<li class="layui-nav-item"><a href="/login">登录</a></li>
+			</div>
+
+			<li  shiro:user="" class="layui-nav-item lay-unselect=">
+				<a href="javascript:;">
+					<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+				</a>
+				<dl class="layui-nav-child layui-anim layui-anim-upbit">
+					<dd><a href="">个人中心</a></dd>
+					<dd><a href="">私信</a></dd>
+					<dd><a href="">回复我的</a></dd>
+					<dd><a href="">系统消息</a></dd>
+					<dd><a href="/logoutme">退出登录</a></dd>
+				</dl>
+			</li>
+		</ul>
+
+	<a href="/test">测试</a>
 		
 	</body>
-	
+
 </html>

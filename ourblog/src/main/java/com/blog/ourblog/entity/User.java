@@ -10,6 +10,15 @@ public class User {
     private String password;
     private Timestamp time;
     private String recentLocation;
+    private String imageURL;
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
 
     public String getRecentLocation() {
         return recentLocation;

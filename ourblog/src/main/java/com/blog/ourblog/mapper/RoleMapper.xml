@@ -12,9 +12,20 @@
 
     <select id="findRoleIdByUserId" parameterType="int" resultType="Integer">
     SELECT
-    `role_id`,
+    `role_id`
     FROM
     `user_role` where user_id = #{userId}
     </select>
+    <insert id="setRole" >
+        INSERT INTO user_role
+        (user_id,
+        role_id)
+        VALUES
+        <foreach collection="list" item="roleId">
+            (#{userId},
+            #{roleId}
+            )
+        </foreach>
+    </insert>
 
 </mapper>
