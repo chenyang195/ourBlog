@@ -3,7 +3,7 @@ package com.blog.ourblog.entity;
 import java.sql.Timestamp;
 
 public class Article {
-    private Integer id;
+    private Integer articleId;
     private String userName;
     private String title;
     private String synopsis;
@@ -44,19 +44,19 @@ public class Article {
     @Override
     public String toString() {
         return "Article{" +
-                "id=" + id +
+                "articleId=" + articleId +
                 ", userName='" + userName + '\'' +
                 ", title='" + title + '\'' +
                 ", synopsis='" + synopsis + '\'' +
                 '}';
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getArticleId() {
+        return articleId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
     }
 
     public String getUserName() {
@@ -142,7 +142,7 @@ public class Article {
     }
 
     public Article(Integer id, String userName, String title, String synopsis, String content, Timestamp updateTime, Integer starNum, Integer praiseNum, Integer treadNum, Integer hotIndex) {
-        this.id = id;
+        this.articleId = id;
         this.userName = userName;
         this.title = title;
         this.synopsis = synopsis;

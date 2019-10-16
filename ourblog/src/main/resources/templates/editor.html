@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf">
 <head>
     <meta charset="UTF-8">
     <title>wangEditor demo</title>
+
 	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 </head>
 <body>
@@ -10,9 +11,9 @@
 	<div style="width: 100%;">
 		<div style="margin: 20px;">
 			<p style="font-size: 20px;">文章题目</p>
-			<input type="text" name="title" id ="title1" style="width: 50%;height: 30px;font-size: 30px;border-radius: 5px;" /><br />
+			<input type="text" name="title" id ="title1"  maxlength="20" style="width: 50%;height: 30px;font-size: 30px;border-radius: 5px;" /><br />
 			<p style="font-size: 20px;">文章简介</p>
-			<textarea name="introduction" id="intr1"
+			<textarea name="introduction" id="intr1" maxlength="100"
 			style="width: 100%;height: 90px;font-size: 25px;OVERFLOW:visible;border-radius: 5px;"></textarea>
 			<p style="font-size: 20px;">文章内容</p>
 		</div>
@@ -27,40 +28,47 @@
 		var editor = new E('#editor');
 		editor.customConfig.uploadImgServer = '/uploadImage';
         editor.create();
-		 editor.txt.html('<p>用 JS 设置的内容</p>')
+		 editor.txt.html('<p></p>')
 		  
     </script>
-	<button id="btn1">提交</button>
+	<button id="btn1" onclick="pushEssay()">提交</button>
 	<button>存为草稿</button>
 </body>
 <script type="text/javascript">
-	document.getElementById('btn1').addEventListener('click', function () {
-	       // 读取 html
-	       
-		   var content = editor.txt.html();
-		   var url = "/pushessay"
 
-		   function PostSubmit(url){
-		       var postUrl = url;//提交地址
-		       var postData = data;//第一个数据
-		      
-		       var ExportForm = document.createElement("FORM");
-		       document.body.appendChild(ExportForm);
-		       ExportForm.method = "POST";
-		       var newElement = document.createElement("input");
-		       newElement.setAttribute("name", "sn");
-		       newElement.setAttribute("type", "hidden");
-		       var newElement2 = document.createElement("input");
-		       newElement2.setAttribute("name", "no");
-		       newElement2.setAttribute("type", "hidden");
-		       ExportForm.appendChild(newElement);
-		       ExportForm.appendChild(newElement2);
-		       newElement.value = postData;
-		       newElement2.value = msgData;
-		       ExportForm.action = postUrl;
-		       ExportForm.submit();
-		   };
-		  
-	   }, false)
+
+	function pushEssay(){
+		var title = $("#title1").val();
+
+		var synopsis =$("#intr1").val();
+
+		var content = editor.txt.html();
+		var jsonEssay =  {
+			"title": title,
+			"synopsis": synopsis,
+			"content" : content
+		}
+		var msg = "";
+		$.ajax({
+			url:"/pushEssay",
+			data:jsonEssay,
+			async:false,
+			type:'post',
+			success: function (data) {
+				msg = data;
+
+			}
+
+		});
+		if (msg != "-1"){
+			alert("提交成功！")
+			var url = "/showArticle?articleId="+msg;
+			window.location.href=url;
+
+		}else {
+			alert("提交失败请稍后再试！");
+		}
+
+	}
 </script>
 </html>

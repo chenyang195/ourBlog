@@ -15,6 +15,19 @@
 				var element = layui.element;
 
 			}])
+
+			layui.use('carousel', function(){
+				var carousel = layui.carousel;
+				//建造实例
+				carousel.render({
+					elem: '#test1',
+					height:'20%'
+					,width: '100%' //设置容器宽度
+					//,arrow: 'always' //始终显示箭头
+					//,anim: 'updown' //切换动画方式
+				});
+			});
+
 			function getHomePage(){
 				var pageHTML = "";
 
@@ -32,12 +45,26 @@
 								var aryicleNum = pageContent.articleNum;
 
 								var stick = pageContent.articleMap.stick;
-								alert(JSON.stringify(stick));
+								var hot = pageContent.articleMap.hot;
+                                var newArticle = pageContent.articleMap.new;
+
 								pageHTML+="<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>置顶文章</p></div>"
 								$.each(stick,function(i,val){
-									pageHTML +="<div class='article-container' ><div class='margin-around' > <div class='article-title'> <a href='https://www.baidu.com'> <p class='article-title-text' >"+val['title']+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='#'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
+									pageHTML +="<div class='article-container' id='"+val.articleId +" ' ><div class='margin-around' > <div class='article-title'> <a href='/showArticle?articleId="+val.articleId+" ' target='_Blank'> <p class='article-title-text' >"+val.title+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName="+val.userName+"' target='_Blank'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star' onclick='star()'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread' onclick='tread()'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
 								});
 								pageHTML +="</div>";
+
+                                pageHTML+="<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>最热文章</p></div>"
+                                $.each(hot,function(i,val){
+                                    pageHTML +="<div class='article-container' id='"+val.articleId +" ' ><div class='margin-around' > <div class='article-title'> <a href='/showArticle?articleId="+val.articleId+" ' target='_Blank'> <p class='article-title-text' >"+val.title+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName="+val.userName+"' target='_Blank'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star' onclick='star()'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread' onclick='tread()'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
+                                });
+                                pageHTML +="</div>";
+
+                                pageHTML+="<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>最新文章</p></div>"
+                                $.each(newArticle,function(i,val){
+                                    pageHTML +="<div class='article-container' id='"+val.articleId +" ' ><div class='margin-around' > <div class='article-title'> <a href='/showArticle?articleId="+val.articleId+" ' target='_Blank'> <p class='article-title-text' >"+val.title+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName="+val.userName+"' target='_Blank'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star' onclick='star()'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread' onclick='tread()'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
+                                });
+                                pageHTML +="</div>";
 								$("body").append(pageHTML)
 							}
 
@@ -64,8 +91,11 @@
 				<li class="layui-nav-item"><a href="/register">注册</a></li>
 				<li class="layui-nav-item"><a href="/login">登录</a></li>
 			</div>
-
 			<li  shiro:user="" class="layui-nav-item lay-unselect=">
+				<a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
+			</li>
+			<li  shiro:user="" class="layui-nav-item lay-unselect=">
+
 				<a href="javascript:;">
 					<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
 				</a>
@@ -79,7 +109,20 @@
 			</li>
 		</ul>
 
-	<a href="/test">测试</a>
+		<div class="layui-carousel" id="test1" style="margin: 10px;border-radius: 10px">
+			<div carousel-item>
+				<div>
+					<a href="index.html">
+						<img src="https://www.intl.zju.edu.cn/sites/default/files/banner/fengjintu3.jpg" style="width: 100%;"/>
+					</a>
+				</div>
+
+				<div>条目2</div>
+				<div>条目3</div>
+				<div>条目4</div>
+				<div>条目5</div>
+			</div>
+		</div>
 		
 	</body>
 

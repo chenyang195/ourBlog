@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.blog.ourblog.mapper.ArticleMapper">
-    <insert id="addArticle" parameterType="com.blog.ourblog.entity.Article">
+    <insert id="addArticle" parameterType="com.blog.ourblog.entity.Article" useGeneratedKeys="true" keyProperty="articleId">
         insert into t_article
         (username,
         title,
@@ -15,6 +15,7 @@
         #{article.synopsis},
         #{article.content},
         #{article.updateTime})
+
 
     </insert>
     <select id="getArticleNumber" resultType="int">
@@ -41,7 +42,7 @@
         from
         t_article
         where
-        id = {articleId}
+        articleId = {articleId}
 
     </select>
 
@@ -62,7 +63,7 @@
         from
         t_article
         where
-        id = {articleId}
+        articleId = {articleId}
 
     </select>
     <select id="getStickArticleInformation" resultType="com.blog.ourblog.entity.Article">

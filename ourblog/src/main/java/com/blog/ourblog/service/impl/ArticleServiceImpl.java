@@ -4,6 +4,7 @@ import com.blog.ourblog.entity.Article;
 import com.blog.ourblog.entity.Page;
 import com.blog.ourblog.mapper.ArticleMapper;
 import com.blog.ourblog.service.ArticleService;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,5 +55,25 @@ public class ArticleServiceImpl implements ArticleService {
     public List<Article> getBan(Integer pageHead, Integer pageSize) {
         List<Article> listBan = articleMapper.getBanArticleInformation(pageHead,pageSize);
         return listBan;
+    }
+
+    @Override
+    public Integer addArticle(String articleTitle, String synopsis, String content) {
+        Article article = new Article();
+        article.setContent(content);
+        article.setSynopsis(synopsis);
+        article.setTitle(articleTitle);
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        article.setUserName(userName);
+        article.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+
+
+        articleMapper.addArticle(article);
+        Integer result = article.getArticleId();
+        if (result==null){
+            result = -1;
+        }
+        System.out.println(getClass().toString()+result);
+        return result;
     }
 }
