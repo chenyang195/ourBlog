@@ -76,4 +76,27 @@ public class ArticleServiceImpl implements ArticleService {
         System.out.println(getClass().toString()+result);
         return result;
     }
+
+    @Override
+    public Integer changeStatus(Integer articleId,Integer sign) {
+        Integer result = -1;
+        if(sign==0){
+            result = articleMapper.cancelBanArticlee(articleId);
+        }
+        if (sign==1){
+            result = articleMapper.banArticle(articleId);
+        }
+        if (sign==2){
+            result = articleMapper.draftArticle(articleId);
+        }
+        return result;
+    }
+
+    @Override
+    public Article getArticleAll(Integer articleId) {
+        Article article;
+        article = articleMapper.getArticle(articleId);
+
+        return article;
+    }
 }

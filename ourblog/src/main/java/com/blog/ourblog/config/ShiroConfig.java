@@ -53,6 +53,7 @@ public class ShiroConfig {
         filterMap.put("/favicon.ico","anon");
         filterMap.put("/getImage","anon");
         filterMap.put("/getHomePage","anon");
+        filterMap.put("/showArticle","anon");
 
 
 

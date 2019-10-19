@@ -11,9 +11,9 @@
 	<div style="width: 100%;">
 		<div style="margin: 20px;">
 			<p style="font-size: 20px;">文章题目</p>
-			<input type="text" name="title" id ="title1"  maxlength="20" style="width: 50%;height: 30px;font-size: 30px;border-radius: 5px;" /><br />
+			<input type="text" name="title" id ="title1"  maxlength="30" style="width: 50%;height: 30px;font-size: 30px;border-radius: 5px;" /><br />
 			<p style="font-size: 20px;">文章简介</p>
-			<textarea name="introduction" id="intr1" maxlength="100"
+			<textarea name="introduction" id="intr1" maxlength="200"
 			style="width: 100%;height: 90px;font-size: 25px;OVERFLOW:visible;border-radius: 5px;"></textarea>
 			<p style="font-size: 20px;">文章内容</p>
 		</div>
@@ -31,22 +31,42 @@
 		 editor.txt.html('<p></p>')
 		  
     </script>
-	<button id="btn1" onclick="pushEssay()">提交</button>
-	<button>存为草稿</button>
+	<button id="btn1" class="btn-up">提交</button>
+	<button id="btn2" class="btn-up">存为草稿</button>
 </body>
 <script type="text/javascript">
 
 
-	function pushEssay(){
+	$(".btn-up").click(function(){
+
+
 		var title = $("#title1").val();
+		if (title==""){
+			alert("请填写标题!");
+			return;
+		}
 
 		var synopsis =$("#intr1").val();
+		if (synopsis==""){
+			alert("请填写简介!");
+			return;
+		}
 
 		var content = editor.txt.html();
+		if (content=="<p></p>"){
+			alert("请填写内容!");
+			return;
+		}
+		this.disabled = true;
+		var sign = "0";
+		if(this.id=="btn2"){
+			sign = "2";
+		}
 		var jsonEssay =  {
 			"title": title,
 			"synopsis": synopsis,
-			"content" : content
+			"content" : content,
+			"sign":sign
 		}
 		var msg = "";
 		$.ajax({
@@ -60,15 +80,16 @@
 			}
 
 		});
-		if (msg != "-1"){
+		if (msg!="-1"){
 			alert("提交成功！")
 			var url = "/showArticle?articleId="+msg;
 			window.location.href=url;
 
 		}else {
+			$(".btn-up").disabled = false;
 			alert("提交失败请稍后再试！");
 		}
 
-	}
+	});
 </script>
 </html>

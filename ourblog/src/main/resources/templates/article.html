@@ -1,0 +1,138 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf"
+
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+	<head>
+		<meta charset="utf-8">
+		<title>浏览文章</title>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="css/article.css" />
+
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="../layui/layui.js"></script>
+		<script type="text/javascript">
+			layui.use(["element",function(){
+				var element = layui.element;
+
+			}])
+		</script>
+	</head>
+	<body>
+					 
+					<ul class="layui-nav">
+					  	<li class="layui-nav-item layui-this"><a href="">首页</a></li>
+						<li class="layui-nav-item"><a href="">最热文章</a></li>
+					  	<li class="layui-nav-item"><a href="">最新发布</a></li>
+						<li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
+					  
+					</ul>
+					<ul class="layui-nav layui-layout-right">
+						<div shiro:guest="">
+							<li class="layui-nav-item"><a href="/register">注册</a></li>
+							<li class="layui-nav-item"><a href="/login">登录</a></li>
+						</div>
+						<li  shiro:user="" class="layui-nav-item lay-unselect=">
+							<a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
+						</li>
+						<li  shiro:user="" class="layui-nav-item lay-unselect=">
+
+							<a href="javascript:;">
+								<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+							</a>
+							<dl class="layui-nav-child layui-anim layui-anim-upbit">
+								<dd><a href="">个人中心</a></dd>
+								<dd><a href="">私信</a></dd>
+								<dd><a href="">回复我的</a></dd>
+								<dd><a href="">系统消息</a></dd>
+								<dd><a href="/logoutme">退出登录</a></dd>
+							</dl>
+						</li>
+					</ul>
+					
+	<div class="show-article-body">
+		<div class="show-article-title" th:text="${article.title}"></div>
+				
+		<div class="show-article-time" id="show-article-time" th:text="${article.updateTime}">2019-10-1 18:32:01</div>
+					
+				
+				
+
+		<div class="show-article-content" th:utext="${article.content}"></div>
+		<div class="show-article-authorInfo">
+			<div class="show-article-author" ><a href="#" th:text="${article.userName}">ahsajdh</a></div>
+			<div class="show-article-appraise">
+				<div class="layui-icon layui-icon-star show-article-appraise-star"><p class="p-num" th:text="${article.starNum}">11</p></div>
+				<div onclick="praise()" class="layui-icon layui-icon-praise show-article-appraise-praise" th:text="${article.praiseNum}"><p class="p-num">11</p></div>
+				<div class="layui-icon layui-icon-tread show-article-appraise-tread"><p class="p-num" th:text="${article.treadNum}">11</p></div>
+			</div>
+		</div>		
+	
+		
+		
+	</div>
+	
+	<div class="show-article-comment">
+		<div class="show-article-comment-title">评论</div>
+			
+		<div class="show-article-comment-write" >
+			<textarea class="show-article-comment-textarea" maxlength ="500"></textarea>
+			<div class="show-article-comment-write-button">
+				<button class="show-article-comment-button">提交</button>
+			</div>
+			
+		</div>
+		
+		<div class="show-article-comment-content">
+			<hr>
+			<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
+
+    “你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
+			<div class="comment-function-domain" >
+				<div class="comment-time">2019-10-1 18:32:01</div>
+				<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
+			</div>
+		</div>
+		<div class="show-article-comment-content">
+				<hr>
+				<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
+		
+		“你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
+				<div class="comment-function-domain" >
+					<div class="comment-time">2019-10-1 18:32:01</div>
+					<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
+				</div>
+			</div>
+			<div class="show-article-comment-content">
+					<hr>
+					<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
+			
+			“你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
+					<div class="comment-function-domain" >
+						<div class="comment-time">2019-10-1 18:32:01</div>
+						<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
+					</div>
+				</div>
+		
+		
+		
+		<hr >
+		<div style="margin-top: 5%;text-align: center;">底部</div>
+	</div>
+		
+</body>
+<script type="text/javascript">
+	$(".comment-func").click(function(){
+		$(".show-article-comment-write-ar").remove();
+		var name1 = this.uname;
+		var addhtml = "";
+		addhtml += "<div class='show-article-comment-write";
+		addhtml += " show-article-comment-write-ar"
+		addhtml +="'><textarea class='show-article-comment-textarea' maxlength ='500'></textarea><div class='show-article-comment-write-button'><button class='show-article-comment-button'"
+		addhtml +="unam='"+name1+"'";
+		addhtml +=">提交</button></div></div>"
+		$(this).parent().parent().append(addhtml);
+	});
+</script>
+		
+</html>

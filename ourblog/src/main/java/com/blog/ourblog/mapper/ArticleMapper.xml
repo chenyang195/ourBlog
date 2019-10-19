@@ -42,7 +42,7 @@
         from
         t_article
         where
-        articleId = {articleId}
+        article_id = #{articleId}
 
     </select>
 
@@ -63,7 +63,7 @@
         from
         t_article
         where
-        articleId = {articleId}
+        article_id = #{articleId}
 
     </select>
     <select id="getStickArticleInformation" resultType="com.blog.ourblog.entity.Article">
@@ -221,6 +221,14 @@
         article_id = #{articleId}
 
     </update>
+    <update id="draftArticle">
+        UPDATE t_article
+         SET
+         is_ban = 2
 
+        WHERE
+        article_id = #{articleId}
+
+    </update>
 
 </mapper>

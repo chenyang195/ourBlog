@@ -1,0 +1,108 @@
+	
+.show-article-body{
+	margin-top: 3%;
+}
+.show-article-title{
+	text-align: center;
+	font-size: 30px;
+}
+.show-article-time{
+	margin-right: 5%;
+	margin-top: 3%;
+	text-align: right;
+	font-size: 20px;
+}
+.show-article-content{
+	font-size: 25px;
+	margin-top: 3%;
+	text-indent:36px;
+	margin: 2%;
+}
+.show-article-authorInfo{
+	margin: 5%;
+	font-size: 35px;
+}
+.show-article-author{
+	display:inline;
+	color: #009688;
+	
+}
+.show-article-appraise{
+	margin-right:5px;
+	display:inline;
+	float:right;
+	text-align: right;
+	
+}
+.show-article-appraise-star{
+	display:inline;
+	margin: 15px;
+	cursor:pointer;
+	color: orange;
+	font-size: 35px;
+}
+.show-article-appraise-praise{
+	display:inline;
+	margin: 15px;
+	cursor:pointer;
+	color:red;
+	font-size: 35px;
+}
+.show-article-appraise-tread{
+	display:inline;
+	margin: 15px;
+	cursor:pointer;
+	color: greenyellow;
+	font-size: 35px;
+}
+.show-article-comment{
+	margin-left: 5%;
+	margin-right: 5%;
+}
+.show-article-comment-title{
+	font-size: 25px;
+}
+.show-article-comment-write{
+	margin: 20px;
+	width: 100%;
+}
+.show-article-comment-textarea{
+	width: 800px;
+	height: 90px;
+	float: left;
+	border-radius: 5px;
+	font-size: 25px;
+
+}
+.show-article-comment-button{
+	width: 80px;
+	height: 80px;
+	margin-top: 5px;
+	font-size: 25px;
+	border-radius: 5px;
+	background-color: #01AAED;
+	color: #DAF1ED;
+}
+.show-article-comment-content{
+	font-size: 25px;
+	float:none;
+}
+.comment-function-domain{
+	margin-left: 2%;
+	margin-right: 5%;
+}
+.comment-time{
+	text-align: left;
+	font-size: 30px;
+	display: inline;
+}
+.comment-func{
+	text-align: right;
+	display: inline;
+	font-size: 30px;
+	cursor:pointer;
+	color: #203B41;
+}
+.p-num{
+	display: inline;
+}

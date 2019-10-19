@@ -23,5 +23,6 @@ public interface ArticleMapper {
     public Integer stickArticle(@Param("articleId")Integer articleId);
     public Integer cancelBanArticlee(@Param("articleId")Integer articleId);
     public Integer cancelStickArticle(@Param("articleId")Integer articleId);
+    public Integer draftArticle(@Param("articleId")Integer articleId);
 
 }
