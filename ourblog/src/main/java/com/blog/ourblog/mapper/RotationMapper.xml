@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.ourblog.mapper.RotationMapper">
+    <insert id="addRotation" parameterType="com.blog.ourblog.entity.Rotation" useGeneratedKeys="true" keyProperty="id">
+        insert into t_rotation
+        (image_src,
+        hyperlink)
+        values
+        (#{rotation.imageSrc},
+        #{rotation.hyperlink})
+    </insert>
+    <select id="getRotations" resultType="com.blog.ourblog.entity.Rotation">
+        select
+        id,
+        image_src as imageSrc,
+        hyperlink
+        from
+        t_rotation
+
+
+    </select>
+   <delete id="deleteRotation">
+       DELETE FROM
+       t_rotation
+       WHERE
+       id = #{id}
+   </delete>
+
+    <update id="updateRotation" parameterType="com.blog.ourblog.entity.Rotation" >
+         UPDATE t_rotation
+        SET image_src = #{rotation.imageSrc},
+         hyperlink = #{rotation.hyperlink}
+        WHERE id = #{rotation.id}
+    </update>
+</mapper>

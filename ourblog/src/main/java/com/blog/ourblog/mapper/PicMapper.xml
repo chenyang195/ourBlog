@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.ourblog.mapper.PicMapper">
+    <insert id="addPic">
+        insert into
+        t_pic
+        (md5,
+        src)
+        values
+         (#{pic.md5},
+        #{pic.src}
+        )
+    </insert>
+    <select id="getPic" resultType="com.blog.ourblog.entity.Pic">
+        select *
+        from t_pic
+        where md5 = #{md5}
+    </select>
+
+
+</mapper>

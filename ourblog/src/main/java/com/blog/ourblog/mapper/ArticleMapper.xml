@@ -83,8 +83,7 @@
         t_article
         where
         is_stick = 1 and is_ban = 0
-        limit
-        #{pageHead},#{pageSize}
+
 
     </select>
     <select id="getStickArticleNumber" resultType="int">
@@ -143,7 +142,7 @@
         #{pageHead},#{pageSize}
 
     </select>
-    <select id="getBanArticleNumber">
+    <select id="getBanArticleNumber" resultType="Integer">
         select
         count(*)
         from
@@ -188,7 +187,7 @@
     <update id="banArticle">
         UPDATE t_article
          SET
-         is_ban = 1;
+         is_ban = 1
 
         WHERE
         article_id = #{articleId}
@@ -197,7 +196,7 @@
     <update id="stickArticle">
         UPDATE t_article
          SET
-         is_stick = 1;
+         is_stick = 1
 
         WHERE
         article_id = #{articleId}
@@ -206,7 +205,7 @@
     <update id="cancelBanArticle">
         UPDATE t_article
          SET
-         is_ban = 0;
+         is_ban = 0
 
         WHERE
         article_id = #{articleId}
@@ -215,7 +214,7 @@
     <update id="cancelStickArticle">
         UPDATE t_article
          SET
-         is_stick = 0;
+         is_stick = 0
 
         WHERE
         article_id = #{articleId}
@@ -228,6 +227,20 @@
 
         WHERE
         article_id = #{articleId}
+
+    </update>
+
+    <update id="updateArticleInformation">
+        UPDATE t_article
+         SET
+
+         star_num = #{article.starNum},
+        praise_num = #{article.praiseNum},
+        tread_num = #{article.treadNum},
+        hot_index = #{article.hotIndex}
+
+        WHERE
+        article_id = #{article.articleId}
 
     </update>
 

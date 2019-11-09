@@ -1,0 +1,24 @@
+.rotation-title{
+	font-size:2.5rem;
+}
+
+.rotation-img{
+	width: 80%;
+	cursor:pointer;
+}
+.rotation-hyperlink{
+	font-size:1.875rem;
+	border-radius: 5px;
+}
+.rotation-input-text{
+	width: 40rem; 
+	font-size: 1.25rem;
+	height: 1.875rem;
+}
+	
+.rotation-button{
+	font-size: 1.5625rem;
+	border-radius: 5px;
+	background: #009E94;
+	color: #2C3E50;
+}

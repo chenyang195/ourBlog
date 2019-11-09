@@ -6,6 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
 
+
 mybatis:
   mapper-locations: com.cy.springbootshironodb.mapper/*Mapper.xml
   type-aliases-package: com.cy.springbootshironodb.entity
@@ -16,3 +17,5 @@ logging:
     com:
       example:
         mapper : info
+# 文件上传
+

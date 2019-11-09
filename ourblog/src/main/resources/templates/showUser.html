@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf"
+
+	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+	<head>
+		<meta charset="utf-8">
+		<title>查看用户</title>
+		<link rel="stylesheet" href="layui/css/layui.css" />
+		<link rel="stylesheet" href="css/showUser.css" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		
+		<script src="layui/layui.js"></script>
+		<script type="text/javascript">
+			layui.use(["element",function(){
+				var element = layui.element;
+			
+			}])
+		</script>
+
+
+	</head>
+	<body>
+		 <div id="">
+		 	
+		 
+		<ul class="layui-nav">
+			<li class="layui-nav-item"><a href="/">首页</a></li>
+			<li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
+			<li class="layui-nav-item"><a href="/newArticle">最新发布</a></li>
+			<li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
+		  
+		</ul>
+		<ul class="layui-nav layui-layout-right">
+			<div shiro:guest="">
+				<li class="layui-nav-item"><a href="/register">注册</a></li>
+				<li class="layui-nav-item"><a href="/login">登录</a></li>
+			</div>
+			<li shiro:user="" class="layui-nav-item"><a href="write.html"><div class="layui-icon layui-icon-edit">写文章</div></a></li>
+			<li  shiro:user="" class="layui-nav-item lay-unselect=">
+				<a href="javascript:;">
+					<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+				</a>
+				<dl class="layui-nav-child layui-anim layui-anim-upbit">
+					<dd><a href="/yourself">个人中心</a></dd>
+					<dd><a href="">私信</a></dd>
+					<dd><a href="">回复我的</a></dd>
+					<dd><a href="">系统消息</a></dd>
+					<dd><a href="/logoutme">退出登录</a></dd>
+				</dl>
+			</li>
+		</ul>
+		</div>
+		<div class="layui-tab">
+		  <ul class="layui-tab-title">
+		    <li class="layui-this">他的资料</li>
+		    <li>他的最新文章</li>
+		    <li>他的热门文章</li>
+		   
+		  </ul>
+		  <div class="layui-tab-content">
+		    <div class="layui-tab-item layui-show">
+				<div class="user-page"style="margin: 5%;">
+					
+					
+					<div>
+						<div class="user-page-info"style="float: left; width:80%;height: 200px;">
+							<div style="font-size: 30px;">
+								个人信息
+							</div>
+							<hr />
+							<div class="user-page-info-id" style="text-align: center;font-size: 25px;" th:text="${user.username}">
+							ID:耳根
+							</div>
+							<hr />
+							<div class="user-page-info-time" style="text-align: center;font-size: 25px;">
+							创建时间：<p th:text="${user.time}"></p>
+							</div>
+						</div>
+						<div class="user-page-img" style="float: left;width: 20%;height: 200px;">
+							<div class="user-page-img-show" style="margin: 20px;text-align: center;">
+								<img id="img1" th:src="${user.imageURL}" style="height: 150px;cursor:pointer;"/>
+							</div>
+							
+						</div>
+					</div>
+					
+					<hr><br><br>
+					<div class="user-page-synopsis" style="float: left; width: 100%;font-size: 20px;" th:text="${user.synopsis}">
+						 靠山宗，位于南赡大地南域边缘的赵国境内，
+						 曾是赵国四大宗门之首，就算是整个南域也都颇有其名，
+						 可如今没落，地位不比从前，也没有了曾经的辉煌，现今于赵国，只能算是末流。
+					</div>
+					<div class="user-page-sendmsg" style="text-align: right;margin-right: 100px;">
+						<button type="button" class="layui-btn" th:id="${user.username}">私信他</button>
+						
+					</div>
+				</div>
+		      
+		    </div>
+		    <div class="layui-tab-item">他的最新文章</div>
+		    <div class="layui-tab-item">他的热门文章</div>
+		  
+		  </div>
+		</div>
+		<script type="text/javascript">
+			$(".layui-btn").click(function(){
+				$(".show-article-comment-write-ar").remove();
+				var name1 = this.id;
+				var addhtml = "";
+				addhtml += "<div class='show-article-comment-write";
+				addhtml += " show-article-comment-write-ar";
+				addhtml +="'><textarea class='show-article-comment-textarea' maxlength='500'></textarea><div class='show-article-comment-write-button'><button class='show-article-comment-button'";
+				addhtml +="unam='"+name1+"'";
+				addhtml +=">提交</button></div></div>";
+				$(this).parent().parent().append(addhtml);
+			});
+
+		</script>
+		
+	</body>
+</html>

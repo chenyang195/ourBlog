@@ -2,8 +2,13 @@ package com.blog.ourblog.controller;
 
 import ch.qos.logback.core.util.FileUtil;
 import com.blog.ourblog.entity.EditorImageInfo;
+import com.blog.ourblog.entity.Pic;
+import com.blog.ourblog.mapper.PicMapper;
 import com.blog.ourblog.service.UtilService;
+import com.blog.ourblog.util.MD5Encrypt;
 import com.blog.ourblog.util.VerificationCodeUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,6 +31,9 @@ import java.util.*;
 
 @Controller
 public class UtilController {
+
+    @Resource
+    PicMapper picMapper;
     @Autowired
     UtilService utilService;
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -51,7 +60,7 @@ public class UtilController {
     public Object upLoad(MultipartHttpServletRequest multipartHttpServletRequest){
 
         // 图片存储路径
-        String path = "C:/Users/13663/Desktop/git/ourBlog/ourblog/picDB/image";
+        String path = "/home/ubuntu/picDB/image";
         // 返回值
         HashMap map = new HashMap();
         List<String> data = new ArrayList<>();
@@ -62,6 +71,17 @@ public class UtilController {
             // 取得上传文件
             MultipartFile multipartFile = multipartHttpServletRequest.getFile(iterator.next());
             if (multipartFile != null) {
+               String md5 = MD5Encrypt.getMd5(multipartFile);
+                Pic pic = picMapper.getPic(md5);
+                if (pic!=null){
+                    map.put("errno", 0);
+                    map.put("data", pic.getSrc());
+
+
+                    return map;
+                }
+
+
                 // 文件名
                 String fileName = multipartFile.getOriginalFilename();
                 // 获取文件拓展名
@@ -73,8 +93,10 @@ public class UtilController {
                     map.put("data", data);
                     return map;
                 }
-                String newFileName = UUID.randomUUID().toString()+extName;
-                System.out.println(newFileName);
+                Subject subject = SecurityUtils.getSubject();
+                String username = subject.getPrincipal().toString();
+                String newFileName = UUID.randomUUID().toString().replaceAll("\\-", "")+extName;
+                logger.info(username+"上传了"+newFileName);
                 // 保证 文件夹存
                 File fileDir = new File(path);
                 if (!fileDir.exists()){
@@ -92,7 +114,11 @@ public class UtilController {
                     return map;
                 }
                 // 构建图片的可访问地址
-                String webUrl = "http://localhost/getImage?imageName=" + newFileName;
+                String webUrl = "/getImage?imageName=" + newFileName;
+                pic = new Pic();
+                pic.setMd5(md5);
+                pic.setSrc(webUrl);
+                picMapper.addPic(pic);
 
                 logger.info("文件路径： {}", webUrl );
                 // 添加到数组中
@@ -102,6 +128,8 @@ public class UtilController {
         // 返回前端需要的格式
         map.put("errno", 0);
         map.put("data", data);
+
+
         return map;
 
     }
@@ -111,6 +139,24 @@ public class UtilController {
         try {
             bos = new BufferedOutputStream( response.getOutputStream());
             utilService.getImage(bos,imageName);
+            bos.flush();
+            bos.close();
+
+        } catch (IOException e) {
+            Logger logger = LoggerFactory.getLogger(getClass());
+            logger.error(e.getMessage());
+
+        }
+
+
+    }
+
+    @RequestMapping("/showPhoto")
+    public void showPhoto(@Param("imageName")String imageName, HttpServletResponse response){
+        BufferedOutputStream bos;
+        try {
+            bos = new BufferedOutputStream( response.getOutputStream());
+            utilService.showPhoto(bos,imageName);
             bos.flush();
             bos.close();
 

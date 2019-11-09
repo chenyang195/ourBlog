@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+    <style></style>
+    <script src="layui/layui.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header layui-bg-black">
+        <div class="layui-logo"><i class="layui-icon layui-icon-user" style="font-size: 30px; color: #fff1fd;"></i>
+            个人中心
+        </div>
+
+        <ul class="layui-nav layui-layout-left" lay-filter="">
+            <li class="layui-nav-item"><a href="/">首页</a></li>
+            <li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
+            <li class="layui-nav-item"><a href="/newArticleS">最新发布</a></li>
+            <li shiro:hasPermission="admin:administrate" class="layui-nav-item "><a href="/admin">后台管理</a></li>
+        </ul>
+
+
+        <ul class="layui-nav layui-layout-right">
+            <li  shiro:user="" class="layui-nav-item lay-unselect=">
+                <a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
+            </li>
+            <li  shiro:user="" class="layui-nav-item layui-thislay-unselect=">
+                <a href="javascript:;">
+                    <img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+                </a>
+                <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                    <dd><a href="/yourself">个人中心</a></dd>
+                    <dd><a href="">私信</a></dd>
+                    <dd><a href="">回复我的</a></dd>
+                    <dd><a href="">系统消息</a></dd>
+                    <dd><a href="/logoutme">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="javascript:;">个人资料</a>
+                </li>
+
+                <li class="layui-nav-item ">
+                    <a href="javascript:;">我的文章</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;"id="showRotation">已发布</a></dd>
+                        <script type="text/javascript">
+                            $("body").on("click", ".rotation-delete", function() {
+
+                                var btn = $(this);
+                                var id = $(this).attr('id');
+                                if(id==null||id==""){
+                                    id="unknow";
+                                }
+                                var jsonComment =  {
+                                    "id": id,
+                                }
+                                $.ajax({
+                                    url:"/deleteRotation",
+                                    data:jsonComment,
+                                    async:true,
+                                    type:'post',
+                                    success: function (data) {
+                                        if(parseInt(data)>0){
+                                            alert("操作成功！");
+                                            btn.attr("disabled","disabled");
+                                            btn.parent().parent().parent().remove();
+                                        }else {
+                                            alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                                        }
+
+                                    },
+                                    error:function () {
+                                        alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                                    }
+
+                                });
+
+                            })
+                            $("body").on("click", ".rotation-hyperlink-active", function() {
+                                var btn = $(this);
+                                var imageURL = $(this).parent().parent().parent().children(".show-rotations-img").children(".rotation-img")[0].src;
+                                if(imageURL==null||imageURL==""){
+                                    imageURL="unknow";
+                                }
+
+                                var id = $(this).attr('id');
+                                if(id==null||id==""){
+                                    id="unknow";
+                                }
+                                var hyperlink = $(this).parent().parent().children(".rotation-hyperlink-link").children(".rotation-input-text").val();
+                                if(hyperlink==null||hyperlink==""){
+                                    hyperlink="unknow";
+                                }
+                                var jsonComment =  {
+                                    "imageURL": imageURL,
+                                    "id": id,
+                                    "hyperlink" : hyperlink
+
+                                }
+                                var msg = "";
+                                $.ajax({
+                                    url:"/reviseRotation",
+                                    data:jsonComment,
+                                    async:true,
+                                    type:'post',
+                                    success: function (data) {
+                                        if(parseInt(data)>0){
+                                            alert("操作成功！");
+                                            btn.attr("disabled","disabled");
+                                        }else {
+                                            alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                                        }
+
+                                    },
+                                    error:function () {
+                                        alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                                    }
+
+                                });
+                            });
+
+                            function activeButton(textInput) {
+                                $(textInput).parent().parent().children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+
+                            }
+
+                            function replaceImg(thisImg){
+
+                                var i =Math.round(Math.random()*100+50);
+                                var inputObj=document.createElement('input')
+                                inputObj.setAttribute('id',i);
+                                inputObj.setAttribute('type','file');
+                                //inputObj.setAttribute('onChange','uploadPic()');
+                                inputObj.setAttribute("style",'visibility:hidden');
+                                inputObj.setAttribute("accept","image/png, image/jpeg, image/gif, image/jpg");
+                                document.body.appendChild(inputObj);
+                                $('#'+i).bind('input propertychange', function() {
+
+                                    var imgFile = inputObj.files[0];
+                                    var formData = new FormData();
+
+                                    formData.append("imgFile",imgFile);
+                                    $.ajax({
+                                        url:"/uploadImage",
+                                        type:"POST",
+                                        data:formData,
+                                        async:false,
+                                        processData:false,
+                                        contentType:false,
+                                        success:function(data){
+                                            if (data != "") {
+
+                                                thisImg.src = data.data;
+                                                $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+                                            }
+                                        }
+                                    })
+                                });
+                                inputObj.click();
+                                inputObj.value ;
+
+
+                                /* $("#_ef").on("change" , function(){
+
+                                 })
+ */
+
+                            }
+
+
+                        </script>
+
+                        <dd><a href="javascript:;">草稿</a></dd>
+
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">消息中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">系统消息</a></dd>
+                        <dd><a href="javascript:;">回复我的</a></dd>
+                        <dd><a href="javascript:;">私信</a></dd>
+
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">安全中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" >登录记录</a></dd>
+                        <dd><a href="javascript:;" onclick=alert("测试阶段暂未开放该功能!")>修改密码</a></dd>
+                        <dd><a href="javascript:;" onclick=alert("测试阶段暂未开放该功能!")>注销账号</a></dd>
+
+                    </dl>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-tab layui-tab-brief" lay-filter="demo"  lay-allowClose="true">
+
+                <ul class="layui-tab-title" id="cardtitle">
+                    <li class="layui-this">个人数据</li>
+
+
+                </ul>
+
+                <div class="layui-tab-content" id="tadContent">
+                    <div class="layui-tab-item layui-show">
+                        <h1>今日访问量:     15</h1>
+                        <h1>总访问量:       1235</h1>
+                        <h1>今日新增用户数: 1</h1>
+                        <h1>总用户数:       15</h1>
+                        <h1>今日新增文章数: 4</h1>
+                        <h1>总文章数:       96</h1>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="layui-footer" style="background-color: white">
+        <div style="text-align: center">------OURBLOG------</div>
+
+    </div>OURBLOG
+</div>
+</body>
+
+<script>
+    layui.use(['layer', 'form', 'element', 'laypage', 'upload', 'tree', 'carousel', 'flow'], function(){
+        var layer = layui.layer
+            ,form = layui.form
+            ,element = layui.element
+            ,$ = layui.jquery
+            ,laypage = layui.laypage
+            ,upload = layui.upload
+            ,tree = layui.tree
+            ,carousel = layui.carousel
+            ,flow = layui.flow;
+
+        //TODO  do something
+        //监听提交
+        form.on('submit(submitForm)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+        var active = {
+            //在这里给active绑定几项事件，后面可通过active调用这些事件
+            tabAdd: function(title,content,id) {
+                //新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+                //关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
+                element.tabAdd('demo', {
+                    title: title,
+                    content:content,
+                    id: id//规定好的id
+                })
+                element.render('tab');
+
+            },
+            tabChange: function(id) {
+                //切换到指定Tab项
+                element.tabChange('demo', id); //根据传入的id传入到指定的tab项
+            },
+            tabDelete: function (id) {
+                element.tabDelete("demo", id);//删除
+            },
+            tabDeleteAll: function (ids) {//删除所有
+                $.each(ids, function (i,item) {
+                    element.tabDelete("demo", item); //ids是一个数组，里面存放了多个id，调用tabDelete方法分别删除
+                })
+            }
+        };
+        $("body").on("click", "#showRotation", function() {
+
+            //$("#cardtitle").append("<li>管理轮播</li>")
+            var title1 = "管理轮播";
+            $.ajax({
+                url:"/getRotation",
+                async:true,
+                success: function (data) {
+                    if (data != "") {
+                        var rotations = data.rotations
+                        var addHtml="";
+                        addHtml+="<div id=''class='show-rotations'><div class='rotation-title'>已有：</div>"
+                        $.each(rotations,function (i,val) {
+
+                            addHtml+="<div><hr/><br/><div class='show-rotations-img'><img class='rotation-img' src='";
+                            addHtml+=val.imageSrc;
+                            addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' onchange='activeButton(this)' value='" ;
+                            addHtml+=val.hyperlink;
+                            addHtml+="' /></span><span class='rotation-hyperlink-span'><input type='button' class='rotation-hyperlink-active' value='修改'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                            addHtml+=val.id;
+                            addHtml+="'/></span><span><input type='button' class='rotation-delete' value='删除' style='font-size: 1.5625rem;' id='";
+                            addHtml+=val.id;
+                            addHtml+="' /> </span></div></div>"
+                        })
+                        addHtml+="<div class='rotation'><div class='rotation-title'>新增：</div>";
+                        addHtml+="<div><hr/><br/><div class='show-rotations-img'><img class='rotation-img' src='";
+                        addHtml+="/getImage?imageName=daitianjia.jpg";
+                        addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' value='" ;
+                        addHtml+="#";
+                        addHtml+="' /></span><span class='rotation-hyperlink-span'><input  class='rotation-hyperlink-active' type='button' value='添加'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                        addHtml+="unknow";
+                        addHtml+="'/></span></div></div></div>";
+                        //$("#tadContent").append(addHtml);
+                        active.tabAdd(title1,addHtml,"rotation1");
+                        active.tabChange("rotation1");
+
+
+
+                    }
+                }
+            });
+        })
+        var tablePage = laypage.render({
+            elem: 'test1'
+            ,count: 1000
+            ,limit: 100
+            ,limits: [100, 300, 500]
+        });
+
+        //执行实例
+        var uploadInst = upload.render({
+            elem: '#uploadFile' //绑定元素
+            ,url: '/upload/' //上传接口
+            ,done: function(res){
+                layer.alert("回调完毕");
+            }
+            ,error: function(){
+                layer.alert("回调异常");
+            }
+        });
+
+
+
+        carousel.render({
+            elem: '#carouse'
+            ,width: '100%' //设置容器宽度
+            ,arrow: 'always' //始终显示箭头
+            //,anim: 'updown' //切换动画方式
+        });
+
+        flow.load({
+            elem: '#flowTest' //指定列表容器
+            ,scrollElem: '.menu-botR'
+            ,done: function(page, next) { //到达临界点（默认滚动触发），触发下一页
+                //模拟数据插入
+                setTimeout(function(){
+                    var lis = [];
+                    for(var i = 0; i < 3; i++){
+                        lis.push('<li>'+ ( (page-1)*8 + i + 1 ) +'</li>')
+                    }
+
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < 4 ); //假设总页数为 10
+                }, 500);
+            }
+            ,end:'到底了！'
+        });
+
+        //按屏加载图片
+        flow.lazyimg({
+            elem: '#flowImageTest img'
+        });
+    });
+</script>
+</html>

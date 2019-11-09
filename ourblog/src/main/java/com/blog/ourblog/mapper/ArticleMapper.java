@@ -9,10 +9,10 @@ import java.util.List;
 @Mapper
 public interface ArticleMapper {
     public Integer addArticle(@Param("article") Article article);
-    public Integer getArticleInformation(@Param("articleId")Integer articleId);
+    public Article getArticleInformation(@Param("articleId")Integer articleId);
     public Integer getArticleNumber();
     public Article getArticle(@Param("articleId")Integer articleId);
-    public List<Article> getStickArticleInformation(@Param("pageHead")Integer pageHead,@Param("pageSize")Integer pageSize);
+    public List<Article> getStickArticleInformation();
     public Integer getStickArticleNumber();
     public List<Article> getHotArticleInformation(@Param("pageHead")Integer pageHead,@Param("pageSize")Integer pageSize);
     public List<Article> getNewArticleInformation(@Param("pageHead")Integer pageHead,@Param("pageSize")Integer pageSize);
@@ -21,8 +21,9 @@ public interface ArticleMapper {
     public Integer updateArticle(@Param("article") Article article);
     public Integer banArticle(@Param("articleId")Integer articleId);
     public Integer stickArticle(@Param("articleId")Integer articleId);
-    public Integer cancelBanArticlee(@Param("articleId")Integer articleId);
+    public Integer cancelBanArticle(@Param("articleId")Integer articleId);
     public Integer cancelStickArticle(@Param("articleId")Integer articleId);
     public Integer draftArticle(@Param("articleId")Integer articleId);
+    public Integer updateArticleInformation(@Param("article") Article article);
 
 }

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import sun.net.www.content.image.jpeg;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -41,7 +42,7 @@ public class UtilServiceImpl implements UtilService {
         Logger logger = LoggerFactory.getLogger(getClass());
 
         //本地使用,上传位置
-        String rootPath = "picDB/image/";
+        String rootPath = "/home/ubuntu/picDB/image";
 
         String filename = file.getOriginalFilename();
 
@@ -49,7 +50,8 @@ public class UtilServiceImpl implements UtilService {
         String suffix = filename.substring(filename.lastIndexOf("."));
 
         UUID uuid = UUID.randomUUID();
-        String newFilename = uuid.toString()+suffix;
+        String uuidStr = uuid.toString().replaceAll("\\-", "");
+        String newFilename = uuidStr+suffix;
         //目标文件
         File descFile = new File(rootPath  + newFilename);
         try {
@@ -74,6 +76,18 @@ public class UtilServiceImpl implements UtilService {
             logger.error(e.getMessage());
         }
 
+    }
+
+    @Override
+    public void showPhoto(OutputStream os, String imageName) {
+        String path = "picDB/profilePhoto/"+imageName;
+
+        try {
+            ImageToIO.getIO(path,os);
+        } catch (IOException e) {
+            Logger logger = LoggerFactory.getLogger(getClass());
+            logger.error(e.getMessage());
+        }
     }
 
 }

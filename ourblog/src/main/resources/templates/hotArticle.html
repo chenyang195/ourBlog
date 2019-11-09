@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf"
+
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+    <link rel="stylesheet" href="css/showArticle.css" />
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script src="layui/layui.js"></script>
+    <script type="text/javascript">
+        layui.use(["element",function(){
+            var element = layui.element;
+
+        }])
+
+        function getArticles(pageNum){
+            if(pageNum<1){
+                return false;
+            }
+            var pageHTML = "";
+            var data = {
+                "pageNum": pageNum
+
+            }
+
+
+            $.ajax({
+                url:"/getHot",
+                async:false,
+                data: data,
+                success: function (data) {
+                    if (data != "") {
+                        var articleIofos =  JSON.parse(data);
+
+                        if(articleIofos!=null){
+
+
+                            var articleNum = articleIofos.articleNum;
+                            var articleList = articleIofos.articleList;
+                            var btnNum = parseInt(articleNum / 10) + 1;
+                            var i = 0;
+                            if(pageNum>btnNum){
+                                return false;
+                            }
+
+                            var pageNum1 = pageNum + 1;
+
+
+
+
+
+                            pageHTML+="<div class='element-block'>"
+                            $.each(articleList,function(i,val){
+                                pageHTML +="<hr size='2'/><div class='article-container' id='"+val.articleId +" ' ><div class='margin-around' > <div class='article-title'> <a href='/showArticle?articleId="+val.articleId+" ' target='_Blank'> <p class='article-title-text' >"+val.title+"</p> </a> </div> <div class='article-text layui-text' >"+val.synopsis+"</div> <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName="+val.userName+"' target='_Blank'>"+val.userName+"</a></div> <div class='article-appraise'><div class='layui-icon layui-icon-star article-appraise-star' onclick='star()'><p >"+val.starNum+"</p></div> <div onclick='praise()' class='layui-icon layui-icon-praise article-appraise-praise'><p>"+val.praiseNum+"</p></div> <div class='layui-icon layui-icon-tread article-appraise-tread' onclick='tread()'><p>"+val.treadNum+"</p></div> </div> </div> </div> </div>"
+                            });
+                            pageHTML +="</div>";
+                            if(btnNum>1){
+
+                            pageHTML += "<div style='text-align: center'><div class='layui-btn-group'>"
+
+                            pageHTML +=	"<button type='button' onclick='getArticles(("
+                            pageHTML +=	pageNum-1
+                            pageHTML +=	"))' class='layui-btn ";
+                            if (1 == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML +=	" '>上一页</button>";
+
+                            pageHTML +=	"<button type='button' onclick='getArticles(("
+                            pageHTML +=	1
+                            pageHTML +=	"))' class='layui-btn ";
+                            if (1 == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML +=	" '>首页</button>";
+
+                            pageHTML += "<button type='button' class='layui-btn layui-btn-disabled'>" + pageNum + "</button>";
+
+                            for (pageNum1; pageNum1 < btnNum; pageNum1++) {
+                                pageHTML += "<button type='button' onclick='getArticles(" ;
+                                pageHTML +=	pageNum1;
+                                pageHTML +=	")' class='layui-btn'>" + pageNum1 + "</button>";
+                                i = i + 1;
+                                if (i > 4) {
+                                    break;
+                                }
+                            }
+                            pageHTML += "<button type='button' class='layui-btn '>" + "..." + "</button>";
+                            pageHTML += "<button type='button' onclick='getArticles((";
+                            pageHTML += btnNum;
+                            pageHTML += "))'";
+                            pageHTML += "class='layui-btn ";
+                            if (btnNum == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML += " '>尾页 </button>";
+                            pageHTML += "<button type='button' onclick='getArticles(("
+                            pageHTML +=pageNum+1;
+                            pageHTML +="))' class='layui-btn"
+                            if (btnNum == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML += " '>下一页</button></div></div>";
+                            }
+
+
+                            $("#show1").html(pageHTML);
+                        }
+
+                    }
+                }
+            });
+
+        }
+    </script>
+
+
+</head>
+<body onload=getArticles(1)>
+
+<ul class="layui-nav">
+    <li class="layui-nav-item "><a href="/">首页</a></li>
+    <li class="layui-nav-item layui-this"><a href="/hotArticle">最热文章</a></li>
+    <li class="layui-nav-item"><a href="/newArticle">最新发布</a></li>
+    <li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
+
+</ul>
+<ul class="layui-nav layui-layout-right">
+    <div shiro:guest="">
+        <li class="layui-nav-item"><a href="/register">注册</a></li>
+        <li class="layui-nav-item"><a href="/login">登录</a></li>
+    </div>
+    <li  shiro:user="" class="layui-nav-item lay-unselect=">
+        <a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
+    </li>
+    <li  shiro:user="" class="layui-nav-item lay-unselect=">
+
+        <a href="javascript:;">
+            <img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+        </a>
+        <dl class="layui-nav-child layui-anim layui-anim-upbit">
+            <dd><a href="/yourself">个人中心</a></dd>
+            <dd><a href="">私信</a></dd>
+            <dd><a href="">回复我的</a></dd>
+            <dd><a href="">系统消息</a></dd>
+            <dd><a href="/logoutme">退出登录</a></dd>
+        </dl>
+    </li>
+</ul>
+<div id="show1">
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+.show-article-comment-write{
+	margin: 20px;
+	width: 100%;
+}
+.show-article-comment-textarea{
+	width: 800px;
+	height: 90px;
+	float: left;
+	border-radius: 5px;
+	font-size: 25px;
+
+}
+.show-article-comment-button{
+	width: 80px;
+	height: 80px;
+	margin-top: 5px;
+	font-size: 25px;
+	border-radius: 5px;
+	background-color: #009688;
+	color: #DAF1ED;
+}

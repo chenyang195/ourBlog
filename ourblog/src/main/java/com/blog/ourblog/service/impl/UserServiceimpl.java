@@ -1,14 +1,17 @@
 package com.blog.ourblog.service.impl;
 
 
+import com.blog.ourblog.entity.LoginHistory;
 import com.blog.ourblog.entity.User;
 import com.blog.ourblog.mapper.UserMapper;
 import com.blog.ourblog.service.IPService;
 import com.blog.ourblog.service.RoleService;
 import com.blog.ourblog.service.UserService;
 import com.blog.ourblog.util.MD5Encrypt;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 
 import javax.annotation.Resource;
@@ -37,7 +40,7 @@ public class UserServiceimpl implements UserService {
 
     public Map addUser(User user) {
         //设置默认头像
-        String defaultImageURL = "C:/Users/13663/Desktop/picDB/profilePhoto/default.jpeg";
+        String defaultImageURL = "/home/ubuntu/picDB/image/default.jpeg";
         user.setImageURL(defaultImageURL);
         Map<String,String> map = new HashMap<>();
         //转换密码为加密后的
@@ -61,10 +64,20 @@ public class UserServiceimpl implements UserService {
     @Override
     public Integer updateLocation(String location, String username) {
         Timestamp timestamp = new java.sql.Timestamp(new java.util.Date().getTime());
+        LoginHistory loginHistory = new LoginHistory();
+        loginHistory.setIP(location);
+        loginHistory.setTime(timestamp);
+        loginHistory.setUserName(username);
+
 
 
         location =ipService.getLocation(location);
-        System.out.println(location+username);
+        if (location==null){
+            location="未知";
+        }
+        loginHistory.setLocation(location);
+        userMapper.insertLoginHistory(loginHistory);
+
         Integer result = userMapper.flushUserLogin(location,timestamp,username);
         return result;
     }
@@ -78,5 +91,14 @@ public class UserServiceimpl implements UserService {
         }
 
         return result;
+    }
+
+    @Override
+    public void showUser(String userName, Model model) {
+        User user = userMapper.findByUsername(userName);
+        String imageURL = user.getImageURL();
+        String[] strings = StringUtils.split(imageURL,"///");
+        user.setImageURL("/showPhoto?imageName="+strings[2]);
+        model.addAttribute("user",user);
     }
 }

@@ -3,6 +3,7 @@ package com.blog.ourblog;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.blog.ourblog.service.CommentService;
 import com.blog.ourblog.service.IPService;
 import com.blog.ourblog.util.HttpUtils;
 import org.apache.http.HttpEntity;
@@ -23,18 +24,12 @@ import java.util.Map;
 @SpringBootTest
 public class OurblogApplicationTests {
     @Autowired
-    IPService ipService;
+    CommentService commentService;
 
 
     @Test
     public void contextLoads() {
-        File file = new File("picDB/profilePhoto/default.jpeg");
-        BufferedInputStream bis;
-        try {
-            bis = new BufferedInputStream(new FileInputStream(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        System.out.println(commentService.getComments(23,1,10));
 
     }
 

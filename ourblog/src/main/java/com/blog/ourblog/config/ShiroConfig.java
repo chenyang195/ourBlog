@@ -54,7 +54,15 @@ public class ShiroConfig {
         filterMap.put("/getImage","anon");
         filterMap.put("/getHomePage","anon");
         filterMap.put("/showArticle","anon");
-
+        filterMap.put("/pushComment","anon");
+        filterMap.put("/getComments","anon");
+        filterMap.put("/user","anon");
+        filterMap.put("/getHot","anon");
+        filterMap.put("/getNew","anon");
+        filterMap.put("/hotArticle","anon");
+        filterMap.put("/newArticle","anon");
+        filterMap.put("/showPhoto","anon");
+        filterMap.put("/getRotation","anon");
 
 
 
@@ -67,6 +75,13 @@ public class ShiroConfig {
         //授权过滤器
         filterMap.put("/test","perms[user:read]");
         filterMap.put("/admin","perms[admin:administrate]");
+        filterMap.put("/reviseRotation","perms[admin:administrate]");
+        filterMap.put("/removeStick","perms[admin:administrate]");
+        filterMap.put("/deleteRotation","perms[admin:administrate]");
+        filterMap.put("/stickArt","perms[admin:administrate]");
+        filterMap.put("/banArt","perms[admin:administrate]");
+        filterMap.put("/getBan","perms[admin:administrate]");
+        filterMap.put("/removeBan","perms[admin:administrate]");
 
 
         filterMap.put("/*","user");

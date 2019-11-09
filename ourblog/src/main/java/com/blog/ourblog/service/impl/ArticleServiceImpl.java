@@ -1,8 +1,11 @@
 package com.blog.ourblog.service.impl;
 
 import com.blog.ourblog.entity.Article;
+import com.blog.ourblog.entity.ArticleInfos;
+import com.blog.ourblog.entity.Icon;
 import com.blog.ourblog.entity.Page;
 import com.blog.ourblog.mapper.ArticleMapper;
+import com.blog.ourblog.mapper.IconMapper;
 import com.blog.ourblog.service.ArticleService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -16,12 +19,14 @@ import java.util.Map;
 public class ArticleServiceImpl implements ArticleService {
     @Resource
     ArticleMapper articleMapper;
+    @Resource
+    IconMapper iconMapper;
     @Override
     public Page getHomePage(Integer pageHead, Integer pageSize) {
         Page page = new Page();
         page.setStickNum(articleMapper.getStickArticleNumber());
         page.setArticleNum(articleMapper.getArticleNumber());
-        List<Article> listStick = articleMapper.getStickArticleInformation(pageHead,pageSize);
+        List<Article> listStick = articleMapper.getStickArticleInformation();
         List<Article> listNew = articleMapper.getNewArticleInformation(pageHead,pageSize);
         List<Article> listHot = articleMapper.getHotArticleInformation(pageHead,pageSize);
         Map<String,List<Article>> map = new HashMap<>();
@@ -34,8 +39,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getStick(Integer pageHead, Integer pageSize) {
-        List<Article> listStick = articleMapper.getStickArticleInformation(pageHead,pageSize);
+    public List<Article> getStick() {
+        List<Article> listStick = articleMapper.getStickArticleInformation();
         return listStick;
     }
 
@@ -73,7 +78,7 @@ public class ArticleServiceImpl implements ArticleService {
         if (result==null){
             result = -1;
         }
-        System.out.println(getClass().toString()+result);
+
         return result;
     }
 
@@ -81,7 +86,7 @@ public class ArticleServiceImpl implements ArticleService {
     public Integer changeStatus(Integer articleId,Integer sign) {
         Integer result = -1;
         if(sign==0){
-            result = articleMapper.cancelBanArticlee(articleId);
+            result = articleMapper.cancelBanArticle(articleId);
         }
         if (sign==1){
             result = articleMapper.banArticle(articleId);
@@ -98,5 +103,62 @@ public class ArticleServiceImpl implements ArticleService {
         article = articleMapper.getArticle(articleId);
 
         return article;
+    }
+
+    @Override
+    public ArticleInfos getHotArticleInfos(Integer pageHead,Integer pageSize) {
+        List<Article> articleList = articleMapper.getHotArticleInformation(pageHead,pageSize);
+        Integer articleNum = articleMapper.getArticleNumber();
+        ArticleInfos articleInfos = new ArticleInfos();
+        articleInfos.setArticleList(articleList);
+        articleInfos.setArticleNum(articleNum);
+        return articleInfos;
+    }
+
+    @Override
+    public ArticleInfos getNewArticleInfos(Integer pageHead,Integer pageSize) {
+        List<Article> articleList = articleMapper.getNewArticleInformation(pageHead,pageSize);
+        Integer articleNum = articleMapper.getArticleNumber();
+        ArticleInfos articleInfos = new ArticleInfos();
+        articleInfos.setArticleList(articleList);
+        articleInfos.setArticleNum(articleNum);
+        return articleInfos;
+    }
+
+    @Override
+    public Integer changeIcon(Integer articleId, Integer sign) {
+        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        if(userName==null){
+            return -1;
+        }
+        Icon icon = new Icon();
+        icon.setArticleId(articleId);
+        icon.setType(sign);
+        icon.setUserName(userName);
+        Integer id = iconMapper.getIdByIcon(icon);
+        if (id !=null){
+
+            return 1;
+        }else {
+            icon.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+            iconMapper.addIcon(icon);
+            updateArticleIcon(articleId,sign);
+           return  1;
+        }
+
+
+
+    }
+
+    void updateArticleIcon(Integer articleId,Integer sign){
+        Article article = articleMapper.getArticleInformation(articleId);
+        if (sign==1){
+            article.setStarNum(article.getStarNum()+1);
+        }else if(sign==2){
+            article.setPraiseNum(article.getPraiseNum()+1);
+        }else if(sign==3){
+            article.setTreadNum(article.getTreadNum()+1);
+        }
+        articleMapper.updateArticleInformation(article);
     }
 }

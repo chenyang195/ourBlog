@@ -7,6 +7,7 @@
     `id`,
     username,
     `password`,
+    synopsis,
     image_url as imageURL,
     recent_location as recentLocation,
     recent_login_time as time
@@ -33,5 +34,34 @@
          recent_login_time = #{timestamp}
         WHERE username = #{username}
     </update>
+
+    <insert id="insertLoginHistory" parameterType="com.blog.ourblog.entity.LoginHistory" >
+        INSERT INTO t_login
+        (user_name,
+        ip,
+        location,
+        login_time)
+        VALUES
+        (#{loginHistory.userName},
+        #{loginHistory.IP},
+        #{loginHistory.location},
+        #{loginHistory.time})
+    </insert>
+
+    <select id="findLoginHistoryByUserName" resultType="com.blog.ourblog.entity.LoginHistory">
+        select
+        id,
+        user_name as userName,
+        ip as IP,
+        location,
+        login_time_time as time
+        from
+        t_login
+        where
+        user_name = #{username}
+        limit
+        #{pageHead},#{pageSize}
+
+    </select>
 
 </mapper>

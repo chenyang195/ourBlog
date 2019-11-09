@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf"
 
 	  xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
@@ -16,14 +16,109 @@
 				var element = layui.element;
 
 			}])
+
+
+
+			function getComments(pageNum) {
+				if(pageNum<1){
+					return false;
+				}
+				var pageHTML = "";
+				var articleId = $("#articleId001").text();
+
+
+
+				var data = {
+					"pageNum": pageNum,
+					"articleId": articleId
+				}
+
+				$.ajax({
+					url: "/getComments",
+					async: false,
+					data: data,
+					success: function (data) {
+						if (data != "") {
+							var CommentAll = JSON.parse(data);
+
+							if (CommentAll != null) {
+
+
+								var commentNum = CommentAll.commentNum;
+								var btnNum = parseInt(commentNum / 10) + 1;
+								if(pageNum>btnNum){
+									return false;
+								}
+								var commentList = CommentAll.comments;
+								var pageNum1 = pageNum + 1;
+								var i = 0
+
+
+								$.each(commentList, function (i, val) {
+									pageHTML += "<div class='show-article-comment-content'><hr> <a href='/user?userName="+val.speaker+" '>" + val.speaker + "</a>回复:<a href='/user?userName="+val.listener+" '>" + val.listener + "</a><br/><div class='comment-function-domain' >" + val.content + " <br><div class='comment-time'>" + fomatTime(val.createTime) + "</div><div class='layui-icon layui-icon-reply-fill comment-func' id='" + val.speaker + " '>回复</div></div></div>";
+								});
+								pageHTML += "<div style='text-align: center'><div class='layui-btn-group'>"
+
+								pageHTML +=	"<button type='button' onclick='getComments(("
+								pageHTML +=	pageNum-1
+								pageHTML +=	"))' class='layui-btn ";
+								if (1 == pageNum) {
+									pageHTML += " layui-btn-disabled";
+								}
+								pageHTML +=	" '>上一页</button>";
+
+								pageHTML +=	"<button type='button' onclick='getComments(("
+								pageHTML +=	1
+								pageHTML +=	"))' class='layui-btn ";
+								if (1 == pageNum) {
+									pageHTML += " layui-btn-disabled";
+								}
+								pageHTML +=	" '>首页</button>";
+
+								pageHTML += "<button type='button' class='layui-btn layui-btn-disabled'>" + pageNum + "</button>";
+
+								for (pageNum1; pageNum1 < btnNum; pageNum1++) {
+									pageHTML += "<button type='button' onclick='getComments(" ;
+									pageHTML +=	pageNum1;
+									pageHTML +=	")' class='layui-btn'>" + pageNum1 + "</button>";
+									i = i + 1;
+									if (i > 4) {
+										break;
+									}
+								}
+								pageHTML += "<button type='button' class='layui-btn '>" + "..." + "</button>";
+								pageHTML += "<button type='button' onclick='getComments((";
+								pageHTML += btnNum;
+								pageHTML += "))'";
+								pageHTML += "class='layui-btn ";
+								if (btnNum == pageNum) {
+									pageHTML += " layui-btn-disabled";
+								}
+								pageHTML += " '>尾页 </button>";
+								pageHTML += "<button type='button' onclick='getComments(("
+								pageHTML +=pageNum+1;
+								pageHTML +="))' class='layui-btn"
+								if (btnNum == pageNum) {
+									pageHTML += " layui-btn-disabled";
+								}
+								pageHTML += " '>下一页</button></div></div>";
+
+
+								$("#showComment").html(pageHTML);
+							}
+
+						}
+					}
+				});
+			}
 		</script>
 	</head>
-	<body>
+	<body onload="getComments(1)">
 					 
 					<ul class="layui-nav">
-					  	<li class="layui-nav-item layui-this"><a href="">首页</a></li>
-						<li class="layui-nav-item"><a href="">最热文章</a></li>
-					  	<li class="layui-nav-item"><a href="">最新发布</a></li>
+					  	<li class="layui-nav-item"><a href="/">首页</a></li>
+						<li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
+					  	<li class="layui-nav-item"><a href="/newArticle">最新发布</a></li>
 						<li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
 					  
 					</ul>
@@ -41,7 +136,7 @@
 								<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
 							</a>
 							<dl class="layui-nav-child layui-anim layui-anim-upbit">
-								<dd><a href="">个人中心</a></dd>
+								<dd><a href="/yourself">个人中心</a></dd>
 								<dd><a href="">私信</a></dd>
 								<dd><a href="">回复我的</a></dd>
 								<dd><a href="">系统消息</a></dd>
@@ -51,8 +146,9 @@
 					</ul>
 					
 	<div class="show-article-body">
+
 		<div class="show-article-title" th:text="${article.title}"></div>
-				
+		<p id="articleId001"   th:text="${article.articleId}" hidden></p>
 		<div class="show-article-time" id="show-article-time" th:text="${article.updateTime}">2019-10-1 18:32:01</div>
 					
 				
@@ -60,11 +156,51 @@
 
 		<div class="show-article-content" th:utext="${article.content}"></div>
 		<div class="show-article-authorInfo">
-			<div class="show-article-author" ><a href="#" th:text="${article.userName}">ahsajdh</a></div>
+			<div class="show-article-author" ><a id="a1" href="#" th:text="${article.userName}">ahsajdh</a></div>
 			<div class="show-article-appraise">
-				<div class="layui-icon layui-icon-star show-article-appraise-star"><p class="p-num" th:text="${article.starNum}">11</p></div>
-				<div onclick="praise()" class="layui-icon layui-icon-praise show-article-appraise-praise" th:text="${article.praiseNum}"><p class="p-num">11</p></div>
-				<div class="layui-icon layui-icon-tread show-article-appraise-tread"><p class="p-num" th:text="${article.treadNum}">11</p></div>
+				<script type="text/javascript">
+					$("body").on("click", ".icon-click", function() {
+						var icon =$(this);
+
+						var sign = icon.attr('id');
+
+						var articleId =$("#articleId001").text();
+
+						$(this).removeClass("icon-click");
+						$(this).attr("style","color:FF6E06;")
+						icon.children(".p-num").text(parseInt(icon.children(".p-num").text())+1);
+						var formData = new FormData();
+
+						formData.append("sign",sign);
+						formData.append("articleId",articleId);
+
+						$.ajax({
+							url: "/changeIcon",
+							type: "POST",
+
+							data: formData,
+							processData: false,   // jQuery不要去处理发送的数据
+							contentType: false,
+							async: true,
+
+							success: function (data) {
+								if (data>0) {
+									if(sign=="1"){
+										alert("收藏成功！")
+									}else if(sign=="2"){
+										alert("点赞成功！")
+									}else if(sign=="3"){
+										alert("你踩了这文章！")
+									}
+								}
+							}
+						})
+
+					})
+				</script>
+				<div style="color: #2C3E50" id="1" class="layui-icon layui-icon-star show-article-appraise-star icon-click"><p class="p-num" th:text="${article.starNum}">11</p></div>
+				<div style="color: #2C3E50" id="2" class="layui-icon layui-icon-praise show-article-appraise-praise icon-click" ><p class="p-num" th:text="${article.praiseNum}">11</p></div>
+				<div style="color: #2C3E50" id="3" class="layui-icon layui-icon-tread show-article-appraise-tread icon-click"><p class="p-num" th:text="${article.treadNum}">11</p></div>
 			</div>
 		</div>		
 	
@@ -78,61 +214,119 @@
 		<div class="show-article-comment-write" >
 			<textarea class="show-article-comment-textarea" maxlength ="500"></textarea>
 			<div class="show-article-comment-write-button">
-				<button class="show-article-comment-button">提交</button>
+				<button class="show-article-comment-button" th:id="${article.userName}">提交</button>
 			</div>
 			
 		</div>
-		
-		<div class="show-article-comment-content">
-			<hr>
-			<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
 
-    “你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
-			<div class="comment-function-domain" >
-				<div class="comment-time">2019-10-1 18:32:01</div>
-				<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
-			</div>
+
+		<div id="showComment">
+
 		</div>
-		<div class="show-article-comment-content">
-				<hr>
-				<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
-		
-		“你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
-				<div class="comment-function-domain" >
-					<div class="comment-time">2019-10-1 18:32:01</div>
-					<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
-				</div>
-			</div>
-			<div class="show-article-comment-content">
-					<hr>
-					<a>asadwss</a>回复:<a>asadwss</a><br/>在学生人群当中，和同学一道走着的拿着书籍的青年，穿着普通蓝色运动服，身高大概一米七五，显得比较精瘦。此时他疑惑转头看去，喊他的是一名男生，身高大概有一米九，长的虎背熊腰，手臂更是粗壮的惊人。
-			
-			“你是？”罗峰疑惑看着来人，自己似乎不认识眼前人。
-					<div class="comment-function-domain" >
-						<div class="comment-time">2019-10-1 18:32:01</div>
-						<div class="layui-icon layui-icon-reply-fill comment-func">回复</div>
-					</div>
-				</div>
-		
 		
 		
 		<hr >
-		<div style="margin-top: 5%;text-align: center;">底部</div>
+		<div style="margin-top: 5%;text-align: center;">OURBLOG</div>
 	</div>
 		
 </body>
 <script type="text/javascript">
-	$(".comment-func").click(function(){
-		$(".show-article-comment-write-ar").remove();
-		var name1 = this.uname;
+
+			$("#a1").attr('href',"/user?userName="+$("#a1").text());
+
+			$("body").on("click", ".comment-func", function() {
+
+				$(".show-article-comment-write-ar").remove();
+
+				var name1 = this.id;
+				var addhtml = "";
+				addhtml += "<div class='show-article-comment-write";
+				addhtml += " show-article-comment-write-ar"
+				addhtml +="'><textarea class='show-article-comment-textarea'></textarea><div class='show-article-comment-write-button'><button id='"+name1+" ' class='show-article-comment-button comment-button'"
+				addhtml +="unam='"+name1+"'";
+				addhtml +=">提交</button></div></div>"
+				$(this).parent().parent().append(addhtml);
+			});
+	$("body").on("click", ".show-article-comment-button", function() {
+
+		var name1 = this.id;
+
+		var comment = $(this).parent().parent().children(".show-article-comment-textarea").val();
+		$(this).parent().parent().children(".show-article-comment-textarea").val("");
+		if(comment==""){
+			alert("请输入回复内容！")
+			return false;
+		}
+		var articleId = $("#articleId001").text();
+
+		var myDate = getTime();
 		var addhtml = "";
-		addhtml += "<div class='show-article-comment-write";
-		addhtml += " show-article-comment-write-ar"
-		addhtml +="'><textarea class='show-article-comment-textarea' maxlength ='500'></textarea><div class='show-article-comment-write-button'><button class='show-article-comment-button'"
-		addhtml +="unam='"+name1+"'";
-		addhtml +=">提交</button></div></div>"
-		$(this).parent().parent().append(addhtml);
+		addhtml +="<div class='show-article-comment-content'><hr>";
+		addhtml +="您回复了:"+name1+"<br/>"+comment+"<div class='comment-function-domain'>";
+		addhtml +="<div class='comment-time'>"+myDate+"</div>";
+		addhtml +="<div class='layui-icon layui-icon-reply-fill comment-func' id='您自己'>回复</div></div></div>"
+		$(this).parent().parent().after(addhtml);
+		$(".show-article-comment-write-ar").remove();
+		var jsonComment =  {
+			"name1": name1,
+			"comment": comment,
+			"articleId" : articleId
+
+		}
+		var msg = "";
+		$.ajax({
+			url:"/pushComment",
+			data:jsonComment,
+			async:true,
+			type:'post',
+			success: function (data) {
+				msg = data;
+
+			}
+
+		});
+
+
 	});
+
+	function getTime(){
+		var d=new Date();
+		var year=d.getFullYear();
+		var month=change(d.getMonth()+1);
+		var day=change(d.getDate());
+		var hour=change(d.getHours());
+		var minute=change(d.getMinutes());
+		var second=change(d.getSeconds());
+		function change(t){
+			if(t<10){
+				return "0"+t;
+			}else{
+				return t;
+			}
+		}
+		var time=year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+		return time;
+	}
+
+	function fomatTime(time) {
+		var d=new Date(time);
+		var year=d.getFullYear();
+		var month=change(d.getMonth()+1);
+		var day=change(d.getDate());
+		var hour=change(d.getHours());
+		var minute=change(d.getMinutes());
+		var second=change(d.getSeconds());
+		function change(t){
+			if(t<10){
+				return "0"+t;
+			}else{
+				return t;
+			}
+		}
+		var time=year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second;
+		return time;
+	}
 </script>
+
 		
 </html>

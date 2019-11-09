@@ -179,4 +179,10 @@ public class UserController {
         String userExist = userService.checkUserExist(username);
         return userExist;
     }
+    @RequestMapping("/user")
+    private String user(@RequestParam("userName")String userName,Model model){
+        userService.showUser(userName,model);
+        return "showUser";
+    }
+
 }

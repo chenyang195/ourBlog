@@ -19,32 +19,61 @@
 			layui.use('carousel', function(){
 				var carousel = layui.carousel;
 				//建造实例
-				carousel.render({
+				var ins = carousel.render({
 					elem: '#test1',
 					height:'30%'
 					,width: '100%' //设置容器宽度
 					//,arrow: 'always' //始终显示箭头
 					//,anim: 'updown' //切换动画方式
 				});
+
+				$.ajax({
+					url:"/getRotation",
+					async:true,
+					success: function (data) {
+						if (data != "") {
+							var rotations = data.rotations
+							var addHtml="";
+							$.each(rotations,function (i,val) {
+
+								addHtml+="<div><a href='";
+								addHtml+=val.hyperlink;
+								addHtml+="' target='_Blank'><img src='";
+								addHtml+=val.imageSrc;
+								addHtml+="' style='object-fit:scale-down; width: 100%'/></a></div>";
+
+
+							})
+
+							$(".showRotation").append(addHtml);
+							ins.reload({
+								elem: '#test1',
+								height:'30%'
+								,width: '100%'
+							});
+						}
+					}
+				});
+
 			});
 
 			function getHomePage(){
 				var pageHTML = "";
 
 				$.ajax({
-					url:"/getHomePage",
-					async:false,
-					success: function (data) {
-						if (data != "") {
-							var pageContent =  JSON.parse(data);
+										url:"/getHomePage",
+										async:true,
+										success: function (data) {
+											if (data != "") {
+												var pageContent =  JSON.parse(data);
 
-							if(pageContent!=null){
+												if(pageContent!=null){
 
 
-								var stickPageNum = pageContent[''];
-								var aryicleNum = pageContent.articleNum;
+													var stickPageNum = pageContent[''];
+													var aryicleNum = pageContent.articleNum;
 
-								var stick = pageContent.articleMap.stick;
+													var stick = pageContent.articleMap.stick;
 								var hot = pageContent.articleMap.hot;
                                 var newArticle = pageContent.articleMap.new;
 
@@ -72,6 +101,8 @@
 					}
 				});
 
+
+
 			}
 		</script>
 
@@ -80,9 +111,9 @@
 	<body onload=getHomePage()>
 		 
 		<ul class="layui-nav">
-		  	<li class="layui-nav-item layui-this"><a href="">首页</a></li>
-			<li class="layui-nav-item"><a href="">最热文章</a></li>
-		  	<li class="layui-nav-item"><a href="">最新发布</a></li>
+		  	<li class="layui-nav-item layui-this"><a href="/">首页</a></li>
+			<li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
+		  	<li class="layui-nav-item"><a href="/newArticle">最新发布</a></li>
 			<li shiro:hasPermission="admin:administrate" class="layui-nav-item"><a href="/admin">管理后台</a></li>
 		  
 		</ul>
@@ -100,7 +131,7 @@
 					<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
 				</a>
 				<dl class="layui-nav-child layui-anim layui-anim-upbit">
-					<dd><a href="">个人中心</a></dd>
+					<dd><a href="/yourself">个人中心</a></dd>
 					<dd><a href="">私信</a></dd>
 					<dd><a href="">回复我的</a></dd>
 					<dd><a href="">系统消息</a></dd>
@@ -109,18 +140,10 @@
 			</li>
 		</ul>
 
-		<div class="layui-carousel" id="test1" style="margin: 10px;border-radius: 10px">
-			<div carousel-item>
-				<div>
-					<a href="index.html">
-						<img src="https://www.intl.zju.edu.cn/sites/default/files/banner/fengjintu3.jpg" style="width: 100%;"/>
-					</a>
-				</div>
+		<div class="layui-carousel" id="test1" >
+			<div carousel-item id="carousels" class="showRotation">
 
-				<div>条目2</div>
-				<div>条目3</div>
-				<div>条目4</div>
-				<div>条目5</div>
+
 			</div>
 		</div>
 		

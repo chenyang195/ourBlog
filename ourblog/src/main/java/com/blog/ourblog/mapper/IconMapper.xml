@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.ourblog.mapper.IconMapper">
+    <select id="getIdByIcon" parameterType="com.blog.ourblog.entity.Icon" resultType="Integer">
+    SELECT
+    `icon_id`as id
+
+    FROM
+    `t_icon` where
+    article_id = #{icon.articleId}
+    and username =#{icon.userName}
+    and `type` = #{icon.type}
+    </select>
+
+    <delete id="deleteIcon">
+        delete from t_icon
+        where icon_id = #{id}
+    </delete>
+    <insert id="addIcon" parameterType="com.blog.ourblog.entity.Icon" useGeneratedKeys="true" keyProperty="id">
+        insert into t_icon
+        (article_id,
+        username,
+        `type`,
+        create_time)
+        values
+        (#{icon.articleId},
+        #{icon.userName},
+        #{icon.type},
+        #{icon.createTime})
+    </insert>
+</mapper>

@@ -43,10 +43,24 @@ public class PageController {
         return "user/register";
     }
 
+    @RequestMapping("/hotArticle")
+    public String hotArticle(){
+        return "hotArticle";
+    }
+
+    @RequestMapping("/newArticle")
+    public String newArticle(){
+        return "newArticle";
+    }
     @RequestMapping("/editor")
     public String editor(){
         return "editor";
     }
+    @RequestMapping("/yourself")
+    public String yourself(){
+        return "personal";
+    }
+
 
 
 

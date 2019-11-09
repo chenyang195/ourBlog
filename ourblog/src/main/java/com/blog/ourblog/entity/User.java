@@ -11,6 +11,15 @@ public class User {
     private Timestamp time;
     private String recentLocation;
     private String imageURL;
+    private String synopsis;
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
 
     public String getImageURL() {
         return imageURL;

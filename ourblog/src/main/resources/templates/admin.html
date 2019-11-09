@@ -1,47 +1,262 @@
 <!DOCTYPE html>
-<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Layui HTML</title>
-    <link rel="stylesheet" href="layui/css/layui.css">
+    <meta charset="utf-8">
+    <title>管理</title>
+    <link rel="stylesheet" href="layui/css/layui.css" />
+    <style>
+        .rotation-title{
+            font-size:2.5rem;
+        }
+
+        .rotation-img{
+            width: 80%;
+            cursor:pointer;
+        }
+        .rotation-hyperlink{
+            font-size:1.875rem;
+            border-radius: 5px;
+        }
+        .rotation-input-text{
+            width: 35rem;
+            font-size: 1.25rem;
+            height: 1.875rem;
+        }
+        .element-block{
+            margin-left: 5%;
+            margin-top: 5%;
+            margin-right: 5%;
+
+        }
+
+        .element-block-head{
+
+            width: 135px;
+        }
+
+        .element-block-text{
+            font-size: 30px;
+            color:#379170;
+            margin-left: 7px ;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .article-container{
+            margin-left: 30px;
+            margin-right: 30px;
+
+            border-radius: 10px;
+        }
+
+        .margin-around{
+            margin:20px;
+            margin-top: 20px;
+        }
+        .article-title{
+            margin-top: 10px;
+        }
+        .article-title-text{
+            font-size: 25px;
+            font-weight:bold;
+        }
+        .article-text{
+            margin-top: 5px;
+            text-indent:30px;
+            font-size: 15px
+        }
+        .article-information{
+            font-size: 25px;
+            margin: 5px;
+        }
+        .article-author{
+            display:inline;
+            color: #009688;
+        }
+        .article-appraise{
+            margin-right:5px;
+            display:inline;
+            float:right;
+        }
+    </style>
     <script src="layui/layui.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <script>
+        function removeStick(btn) {
+
+
+
+            var id = btn.id;
+
+            if(id==null||id==""){
+                alert("网络繁忙！");
+                return false;
+            }
+            var jsonComment =  {
+                "id": id,
+            }
+
+            $.ajax({
+                url:"/removeStick",
+                data:jsonComment,
+                async:true,
+                type:'post',
+                success: function (data) {
+                    if(parseInt(data)>0){
+                        alert("操作成功！");
+
+                        $(btn).parent().parent().parent().parent().remove();
+                    }else {
+                        alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                    }
+
+                },
+                error:function () {
+                    alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                }
+
+            });
+
+        }
+        function stickArt(btn) {
+            var id = btn.id;
+
+            if(id==null||id==""){
+                alert("网络繁忙！");
+                return false;
+            }
+            var jsonComment =  {
+                "id": id,
+            }
+
+            $.ajax({
+                url:"/stickArt",
+                data:jsonComment,
+                async:true,
+                type:'post',
+                success: function (data) {
+                    if(parseInt(data)>0){
+                        alert("操作成功！");
+                        $(btn).attr("onclick","false");
+                        $(btn).attr("value","已经置顶");
+                        $(btn).addClass("layui-btn-disabled");
+
+                    }else {
+                        alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                    }
+
+                },
+                error:function () {
+                    alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                }
+
+            });
+
+        }
+        function banArt(btn) {
+
+
+
+            var id = btn.id;
+
+            if(id==null||id==""){
+                alert("网络繁忙！");
+                return false;
+            }
+            var jsonComment =  {
+                "id": id,
+            }
+
+            $.ajax({
+                url:"/banArt",
+                data:jsonComment,
+                async:true,
+                type:'post',
+                success: function (data) {
+                    if(parseInt(data)>0){
+                        alert("操作成功！");
+
+                        $(btn).parent().parent().parent().parent().remove();
+                    }else {
+                        alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                    }
+
+                },
+                error:function () {
+                    alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                }
+
+            });
+
+        }
+        function removeBan(btn) {
+
+
+
+            var id = btn.id;
+
+            if(id==null||id==""){
+                alert("网络繁忙！");
+                return false;
+            }
+            var jsonComment =  {
+                "id": id,
+            }
+
+            $.ajax({
+                url:"/removeBan",
+                data:jsonComment,
+                async:true,
+                type:'post',
+                success: function (data) {
+                    if(parseInt(data)>0){
+                        alert("操作成功！");
+
+                        $(btn).parent().parent().parent().parent().remove();
+                    }else {
+                        alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                    }
+
+                },
+                error:function () {
+                    alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                }
+
+            });
+
+        }
+    </script>
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
-    <div class="layui-header">
+    <div class="layui-header layui-bg-black">
         <div class="layui-logo"><i class="layui-icon layui-icon-app" style="font-size: 30px; color: #fff1fd;"></i>
-            运营后台管理系统
+            后台管理系统
         </div>
 
         <ul class="layui-nav layui-layout-left" lay-filter="">
-            <li class="layui-nav-item"><a href="">最新活动</a></li>
-            <li class="layui-nav-item layui-this"><a href="">产品</a></li>
-            <li class="layui-nav-item"><a href="">大数据</a></li>
-            <li class="layui-nav-item">
-                <a href="javascript:;">解决方案</a>
-                <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                    <dd><a href="">移动模块</a></dd>
-                    <dd><a href="">后台模版</a></dd>
-                    <dd><a href="">电商平台</a></dd>
-                </dl>
-            </li>
+            <li class="layui-nav-item"><a href="/">首页</a></li>
+            <li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
+            <li class="layui-nav-item"><a href="/newArticleS">最新发布</a></li>
+            <li shiro:hasPermission="admin:administrate" class="layui-nav-item layui-this"><a href="/admin">后台管理</a></li>
         </ul>
 
 
         <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <button class="layui-btn" style="width: 130px;">查看消息<span class="layui-badge layui-bg-gray">10</span></button>
+            <li  shiro:user="" class="layui-nav-item lay-unselect=">
+                <a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
             </li>
-            <li class="layui-nav-item" style="width: 120px;">
+            <li  shiro:user="" class="layui-nav-item lay-unselect=">
                 <a href="javascript:;">
-                    个人中心
+                    <img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
                 </a>
-                <dl class="layui-nav-child">
-                    <dd><a id="userInfo">基本资料<span class="layui-badge-dot layui-bg-orange" /></a></dd>
-                    <dd><a href="">安全设置<span class="layui-badge">99+</span></a></dd>
+                <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                    <dd><a href="/yourself">个人中心</a></dd>
+                    <dd><a href="">私信</a></dd>
+                    <dd><a href="">回复我的</a></dd>
+                    <dd><a href="">系统消息</a></dd>
+                    <dd><a href="/logoutme">退出登录</a></dd>
                 </dl>
             </li>
-            <li class="layui-nav-item"><a href="">退出</a></li>
         </ul>
     </div>
 
@@ -50,24 +265,161 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree"  lay-filter="test">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a href="javascript:;">所有商品</a>
+                    <a href="javascript:;" onclick="showdata()" >网站数据</a>
+                </li>
+
+                <li class="layui-nav-item ">
+                    <a href="javascript:;">首页管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="javascript:;">列表三</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="javascript:;"id="showRotation">轮播图</a></dd>
+                        <script type="text/javascript">
+                            $("body").on("click", ".rotation-delete", function() {
+
+                                var btn = $(this);
+                                var id = $(this).attr('id');
+                                if(id==null||id==""){
+                                    id="unknow";
+                                }
+                                var jsonComment =  {
+                                    "id": id,
+                                }
+                                $.ajax({
+                                    url:"/deleteRotation",
+                                    data:jsonComment,
+                                    async:true,
+                                    type:'post',
+                                    success: function (data) {
+                                        if(parseInt(data)>0){
+                                            alert("操作成功！");
+                                            btn.attr("disabled","disabled");
+                                            btn.parent().parent().parent().remove();
+                                        }else {
+                                            alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                                        }
+
+                                    },
+                                    error:function () {
+                                        alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                                    }
+
+                                });
+
+                            })
+                            $("body").on("click", ".rotation-hyperlink-active", function() {
+                                var btn = $(this);
+                                var imageURL = $(this).parent().parent().parent().children(".show-rotations-img").children(".rotation-img")[0].src;
+                                if(imageURL==null||imageURL==""){
+                                    imageURL="unknow";
+                                }
+
+                                var id = $(this).attr('id');
+                                if(id==null||id==""){
+                                    id="unknow";
+                                }
+                                var hyperlink = $(this).parent().parent().children(".rotation-hyperlink-link").children(".rotation-input-text").val();
+                                if(hyperlink==null||hyperlink==""){
+                                    hyperlink="unknow";
+                                }
+                                var jsonComment =  {
+                                    "imageURL": imageURL,
+                                    "id": id,
+                                    "hyperlink" : hyperlink
+
+                                }
+                                var msg = "";
+                                $.ajax({
+                                    url:"/reviseRotation",
+                                    data:jsonComment,
+                                    async:true,
+                                    type:'post',
+                                    success: function (data) {
+                                        if(parseInt(data)>0){
+                                            alert("操作成功！");
+                                            btn.attr("disabled","disabled");
+                                        }else {
+                                            alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
+                                        }
+
+                                    },
+                                    error:function () {
+                                        alert("发生了一些问题，请稍后再试，或者联系开发人员！");
+                                    }
+
+                                });
+                            });
+
+                            function activeButton(textInput) {
+                                $(textInput).parent().parent().children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+
+                            }
+
+                            function replaceImg(thisImg){
+
+                                var i =Math.round(Math.random()*100+50);
+                                var inputObj=document.createElement('input')
+                                inputObj.setAttribute('id',i);
+                                inputObj.setAttribute('type','file');
+                                //inputObj.setAttribute('onChange','uploadPic()');
+                                inputObj.setAttribute("style",'visibility:hidden');
+                                inputObj.setAttribute("accept","image/png, image/jpeg, image/gif, image/jpg");
+                                document.body.appendChild(inputObj);
+                                $('#'+i).bind('input propertychange', function() {
+
+                                    var imgFile = inputObj.files[0];
+                                    var size = imgFile.size;
+                                    if(size>(5*1024*1024)){
+                                        alert("图片超过5MB！");
+                                        return false;
+
+                                    }
+                                    var formData = new FormData();
+
+                                    formData.append("imgFile",imgFile);
+                                    $.ajax({
+                                        url:"/uploadImage",
+                                        type:"POST",
+                                        data:formData,
+                                        async:false,
+                                        processData:false,
+                                        contentType:false,
+                                        success:function(data){
+                                            if (data != "") {
+
+                                                thisImg.src = data.data;
+                                                $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+                                            }
+                                        }
+                                    })
+                                });
+                                inputObj.click();
+                                inputObj.value ;
+
+
+                               /* $("#_ef").on("change" , function(){
+
+                                })
+*/
+
+                            }
+
+
+                        </script>
+
+                        <dd><a href="javascript:;" id="showStick">置顶文章</a></dd>
+
+
                     </dl>
                 </li>
                 <li class="layui-nav-item">
-                    <a href="javascript:;">解决方案</a>
+                    <a href="javascript:;">文章管理</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">列表一</a></dd>
-                        <dd><a href="javascript:;">列表二</a></dd>
-                        <dd><a href="">超链接</a></dd>
+                        <dd><a href="javascript:;" id="showAll">未封禁</a></dd>
+                        <dd><a href="javascript:;" id="showBan">已封禁</a></dd>
+                        <dd><a href="javascript:;" id="manageHeat">热度管理</a></dd>
+
                     </dl>
                 </li>
-                <li class="layui-nav-item"><a href="">云市场</a></li>
-                <li class="layui-nav-item"><a href="">发布商品</a></li>
+
             </ul>
         </div>
     </div>
@@ -75,137 +427,43 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
-            <div class="layui-tab">
-                <ul class="layui-tab-title">
-                    <li class="layui-this">网站设置</li>
-                    <li>用户管理</li>
-                    <li>权限分配</li>
-                    <li>商品管理</li>
-                    <li>订单管理</li>
+            <div class="layui-tab layui-tab-brief" lay-filter="demo"  lay-allowClose="true">
+
+                <ul class="layui-tab-title" id="cardtitle">
+                    <li class="layui-this">网站数据</li>
+
+
                 </ul>
-                <div class="layui-tab-content">
+
+                <div class="layui-tab-content" id="tadContent">
                     <div class="layui-tab-item layui-show">
-
-                        <form class="layui-form" action="">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">输入框</label>
-                                <div class="layui-input-block">
-                                    <input type="text" name="title"  placeholder="请输入标题" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">开关</label>
-                                <div class="layui-input-block">
-                                    <input type="checkbox" name="switch" lay-skin="switch" value="siwc">
-                                </div>
-                            </div>
-
-                            <select name="city" lay-verify="" lay-search>
-                                <option value="">请选择一个城市</option>
-                                <option value="010">成都</option>
-                                <option value="021">重庆</option>
-                                <option value="022" disabled>上海（禁用效果）</option>
-                            </select>
-
-                            <input type="checkbox" name="checkbox" title="写作"  lay-skin="primary" checked>
-
-                            <div class="layui-form-item">
-                                <div class="layui-input-block">
-                                    <button class="layui-btn" lay-submit lay-filter="submitForm">立即提交</button>
-                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                </div>
-                            </div>
-                        </form>
+                        <h1>今日访问量:     7</h1>
+                        <h1>总访问量:       31</h1>
+                        <h1>今日新增用户数: 0</h1>
+                        <h1>总用户数:       6</h1>
+                        <h1>今日新增文章数: 0</h1>
+                        <h1>总文章数:       96</h1>
 
                     </div>
-                    <div class="layui-tab-item">
-                        进度条展示：<br/>
-                        <div class="layui-progress" lay-showPercent="yes">
-                            <div class="layui-progress-bar layui-bg-red" lay-percent="30%"></div>
-                        </div>
 
-                        <ul class="flow-default" id="flowTest"></ul>
 
-                        <div class="site-demo-flow" id="flowImageTest">
-                            <img lay-src="https://yqfile.alicdn.com/dbebfc5a62245eb4d7b911f73f1bb9721fa0ee1c.png">
-                        </div>
-
-                    </div>
-                    <div class="layui-tab-item">
-
-                        <div class="layui-collapse">
-                            <div class="layui-colla-item">
-                                <h2 class="layui-colla-title">杜甫</h2>
-                                <div class="layui-colla-content layui-show">内容区域</div>
-                            </div>
-                            <div class="layui-colla-item">
-                                <h2 class="layui-colla-title">李清照</h2>
-                                <div class="layui-colla-content ">内容区域</div>
-                            </div>
-                            <div class="layui-colla-item">
-                                <h2 class="layui-colla-title">鲁迅</h2>
-                                <div class="layui-colla-content ">内容区域</div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="layui-tab-item">
-                        <div class="layui-carousel" id="carouse">
-                            <div carousel-item>
-                                <div>条目1</div>
-                                <div>条目2</div>
-                                <div>条目3</div>
-                                <div>条目4</div>
-                                <div>条目5</div>
-                            </div>
-                        </div>
-                        <table class="layui-table">
-                            <thead>
-                            <tr>
-                                <th>昵称</th>
-                                <th>加入时间</th>
-                                <th>签名</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>贤心</td>
-                                <td>2016-11-29</td>
-                                <td>人生就像是一场修行</td>
-                            </tr>
-                            <tr>
-                                <td>许闲心</td>
-                                <td>2016-11-28</td>
-                                <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                    <div class="layui-tab-item">
-                        <div id="test1">
-                        </div>
-                        <button type="button" class="layui-btn" id="uploadFile">
-                            <i class="layui-icon">&#xe67c;</i>上传图片
-                        </button>
-
-                        <div id="treeTest"></div>
-                    </div>
                 </div>
+
             </div>
 
         </div>
     </div>
-    <div class="layui-footer">
+    <div class="layui-footer" style="background-color: white">
+        <div style="text-align: center">------OURBLOG------</div>
         <!-- 底部固定区域 -->
-        © layui.com - 底部固定区域
+
     </div>
 </div>
 </body>
-<link rel="stylesheet" href="../static/layui/css/layui.css">
-<script src="../static/layui/layui.js"></script>
+
 <script>
-    layui.use(['layer', 'form', 'element', 'laypage', 'upload', 'tree', 'carousel', 'flow'], function(){
+
+    layui.use(['layer', 'form', 'element', 'laypage', 'upload', 'tree', 'carousel', 'flow'], function aaa(){
         var layer = layui.layer
             ,form = layui.form
             ,element = layui.element
@@ -222,29 +480,346 @@
             layer.msg(JSON.stringify(data.field));
             return false;
         });
+         var active = {
+            //在这里给active绑定几项事件，后面可通过active调用这些事件
+            tabAdd: function(title,content,id) {
+                //新增一个Tab项 传入三个参数，分别对应其标题，tab页面的地址，还有一个规定的id，是标签中data-id的属性值
+                //关于tabAdd的方法所传入的参数可看layui的开发文档中基础方法部分
+                element.tabAdd('demo', {
+                    title: title,
+                    content:content,
+                    id: id//规定好的id
+                })
+                element.render('tab');
 
-        $('#userInfo').on('click', function () {
-            // layer.open({
-            //     type: 1,
-            //     content: '传入任意的文本或html'
-            // });
-            //
-            layer.open({
-                type: 2,
-                content: 'http://sentsin.com' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-            });
-        });
-
-
-
-        //触发事件
-        var active = {
-            tabChange: function(){
+            },
+            tabChange: function(id) {
                 //切换到指定Tab项
-                element.tabChange('demo', '22'); //切换到：用户管理
+                element.tabChange('demo', id); //根据传入的id传入到指定的tab项
+            },
+            tabDelete: function (id) {
+                element.tabDelete("demo", id);//删除
+            },
+            tabDeleteAll: function (ids) {//删除所有
+                $.each(ids, function (i,item) {
+                    element.tabDelete("demo", item); //ids是一个数组，里面存放了多个id，调用tabDelete方法分别删除
+                })
             }
         };
+        $("body").on("click", "#showRotation", function() {
 
+            //$("#cardtitle").append("<li>管理轮播</li>")
+            var title1 = "管理轮播";
+            $.ajax({
+                url:"/getRotation",
+                async:true,
+                success: function (data) {
+                    if (data != "") {
+                        var rotations = data.rotations
+                        var addHtml="";
+                        addHtml+="<div id=''class='show-rotations'><div class='rotation-title'>已有：</div>"
+                        $.each(rotations,function (i,val) {
+
+                            addHtml+="<div><hr/><br/><div class='show-rotations-img'><img class='rotation-img' src='";
+                            addHtml+=val.imageSrc;
+                            addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' onchange='activeButton(this)' value='" ;
+                            addHtml+=val.hyperlink;
+                            addHtml+="' /></span><span class='rotation-hyperlink-span'><input type='button' class='rotation-hyperlink-active' value='修改'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                            addHtml+=val.id;
+                            addHtml+="'/></span><span><input type='button' class='rotation-delete' value='删除' style='font-size: 1.5625rem;' id='";
+                            addHtml+=val.id;
+                            addHtml+="' /> </span></div></div>"
+                        })
+                        addHtml+="<div class='rotation'><div class='rotation-title'>新增：</div>";
+                        addHtml+="<div><hr/><br/><div class='show-rotations-img'><img class='rotation-img' src='";
+                        addHtml+="/getImage?imageName=daitianjia.jpg";
+                        addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' value='" ;
+                        addHtml+="#";
+                        addHtml+="' /></span><span class='rotation-hyperlink-span'><input  class='rotation-hyperlink-active' type='button' value='添加'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                        addHtml+="unknow";
+                        addHtml+="'/></span></div></div></div>";
+                        //$("#tadContent").append(addHtml);
+                        active.tabDelete("rotation1");
+                        active.tabAdd(title1,addHtml,"rotation1");
+                        active.tabChange("rotation1");
+
+
+
+                    }
+                }
+            });
+        })
+        $("body").on("click","#showStick",function(){
+            var title = "管理置顶";
+            $.ajax({
+                url:"/getStick",
+                async:true,
+                success: function (data) {
+                    var jdata =  JSON.parse(data);
+                    var sticks = jdata.sticks;
+
+                    var addHtml = "<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>所有置顶</p></div>";
+                    $.each(sticks, function (i, val) {
+
+                        addHtml += "<div class='article-container' id='" + val.articleId + " ' >" +
+                            "<hr size='2'/><div class='margin-around' > <div class='article-title'>" +
+                            " <a href='/showArticle?articleId=" + val.articleId + " ' target='_Blank'>" +
+                            " <p class='article-title-text' >" + val.title + "</p> </a> </div>" +
+                            " <div class='article-text layui-text' >" + val.synopsis + "</div>" +
+                            " <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName=" + val.userName + "' target='_Blank'>" +
+                            val.userName + "</a></div> <div class='article-appraise'>" +
+                            "<button class='remove-stick layui-btn layui-btn-sm' onclick='removeStick(this)'id='" +
+                            val.articleId + " '>取消置顶</button> </div> </div> </div> </div>"
+
+                    })
+                    addHtml += "</div>";
+                    active.tabDelete("stick1")
+                    active.tabAdd(title,addHtml,"stick1");
+                    active.tabChange("stick1");
+                }
+
+            });
+
+
+        })
+
+        $("body").on("click","#showAll",function(){
+
+                getArticles(1);
+
+        })
+        $("body").on("click","#showBan",function(){
+
+            getBanArticles(1);
+
+        })
+
+        window.getArticles=function(pageNum) {
+            if(pageNum<1){
+                return false;
+            }
+            var title = "管理未封";
+
+            var data = {
+                "pageNum": pageNum
+
+            }
+            $.ajax({
+                url:"/getNew",
+                async:true,
+                data:data,
+                success: function (data) {
+                    if (data != "") {
+                    var articleIofos =  JSON.parse(data);
+
+                        var articleNum = articleIofos.articleNum;
+                        var articleList = articleIofos.articleList;
+                        var btnNum = parseInt(articleNum / 10) + 1;
+                        var i = 0;
+                        if(pageNum>btnNum){
+                            return false;
+                        }
+
+                        var pageNum1 = pageNum + 1;
+
+                        var pageHTML = "<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>所有文章</p></div>";
+                        $.each(articleList, function (i, val) {
+
+                            pageHTML += "<div class='article-container' id='" + val.articleId + " ' >" +
+                            "<hr size='2'/><div class='margin-around' > <div class='article-title'>" +
+                            " <a href='/showArticle?articleId=" + val.articleId + " ' target='_Blank'>" +
+                            " <p class='article-title-text' >" + val.title + "</p> </a> </div>" +
+                            " <div class='article-text layui-text' >" + val.synopsis + "</div>" +
+                            " <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName=" + val.userName + "' target='_Blank'>" +
+                            val.userName + "</a></div> <div class='article-appraise'>" +
+                            "<button class='stick-art layui-btn layui-btn-sm " ;
+                                    if(val.isStick=="1"){
+                                        pageHTML +="layui-btn-disabled"
+                                    }
+                            pageHTML += "' " ;
+                            if(val.isStick!="1"){
+                                pageHTML +="onclick = 'stickArt(this)'"
+                            }
+
+                                pageHTML += "id='" +val.articleId + " '>" ;
+                            if(val.isStick=="1"){
+                                pageHTML +="已经置顶"
+                            }else {
+                                pageHTML +="置顶文章"
+                            }
+
+                                pageHTML +="</button>" +
+                            "<button class='ban-art layui-btn layui-btn-sm' onclick='banArt(this)'id='" +
+                            val.articleId + " '>封禁文章</button> </div> </div> </div> </div>"
+
+                        })
+
+                        if (btnNum>1) {
+                        pageHTML += "<div style='text-align: center'><div class='layui-btn-group'>"
+
+                        pageHTML +=	"<button type='button' onclick='getArticles(("
+                        pageHTML +=	pageNum-1
+                        pageHTML +=	"))' class='layui-btn ";
+                        if (1 == pageNum) {
+                            pageHTML += " layui-btn-disabled";
+                        }
+                        pageHTML +=	" '>上一页</button>";
+
+                        pageHTML +=	"<button type='button' onclick='getArticles(("
+                        pageHTML +=	1
+                        pageHTML +=	"))' class='layui-btn ";
+                        if (1 == pageNum) {
+                            pageHTML += " layui-btn-disabled";
+                        }
+                        pageHTML +=	" '>首页</button>";
+
+                        pageHTML += "<button type='button' class='layui-btn layui-btn-disabled'>" + pageNum + "</button>";
+
+                        for (pageNum1; pageNum1 < btnNum; pageNum1++) {
+                            pageHTML += "<button type='button' onclick='getArticles(" ;
+                            pageHTML +=	pageNum1;
+                            pageHTML +=	")' class='layui-btn'>" + pageNum1 + "</button>";
+                            i = i + 1;
+                            if (i > 4) {
+                                break;
+                            }
+                        }
+                        pageHTML += "<button type='button' class='layui-btn '>" + "..." + "</button>";
+                        pageHTML += "<button type='button' onclick='getArticles((";
+                        pageHTML += btnNum;
+                        pageHTML += "))'";
+                        pageHTML += "class='layui-btn ";
+                        if (btnNum == pageNum) {
+                            pageHTML += " layui-btn-disabled";
+                        }
+                        pageHTML += " '>尾页 </button>";
+                        pageHTML += "<button type='button' onclick='getArticles(("
+                        pageHTML +=pageNum+1;
+                        pageHTML +="))' class='layui-btn"
+                        if (btnNum == pageNum) {
+                            pageHTML += " layui-btn-disabled";
+                        }
+                        pageHTML += " '>下一页</button></div></div>";}
+
+
+
+                        pageHTML += "</div>";
+
+
+                        active.tabDelete("ban1");
+                        active.tabAdd(title,pageHTML,"ban1");
+                        active.tabChange("ban1");
+                    }
+                }
+
+            });
+        }
+
+        window.getBanArticles=function(pageNum) {
+            if(pageNum<1){
+                return false;
+            }
+            var title = "管理已封";
+
+            var data = {
+                "pageNum": pageNum
+
+            }
+            $.ajax({
+                url:"/getBan",
+                async:true,
+                data:data,
+                success: function (data) {
+                    if (data != "") {
+                        var articleIofos =  JSON.parse(data);
+
+                        var articleNum = articleIofos.articleNum;
+                        var articleList = articleIofos.articleList;
+                        var btnNum = parseInt(articleNum / 10) + 1;
+                        var i = 0;
+                        if(pageNum>btnNum){
+                            return false;
+                        }
+
+                        var pageNum1 = pageNum + 1;
+
+                        var pageHTML = "<div class='element-block'><div class='element-block-head' ><p class='element-block-text'>所有文章</p></div>";
+                        $.each(articleList, function (i, val) {
+
+                            pageHTML += "<div class='article-container' id='" + val.articleId + " ' >" +
+                                "<hr size='2'/><div class='margin-around' > <div class='article-title'>" +
+                                " <a href='/showArticle?articleId=" + val.articleId + " ' target='_Blank'>" +
+                                " <p class='article-title-text' >" + val.title + "</p> </a> </div>" +
+                                " <div class='article-text layui-text' >" + val.synopsis + "</div>" +
+                                " <div class='article-information' > <div class='article-author'>BY:<a href='/user?userName=" + val.userName + "' target='_Blank'>" +
+                                val.userName + "</a></div> <div class='article-appraise'>" ;
+
+
+                            pageHTML +="<button class='ban-art layui-btn layui-btn-sm' onclick='removeBan(this)'id='" +
+                                val.articleId + " '>解除封禁</button> </div> </div> </div> </div>"
+
+                        })
+
+                        if (btnNum>1) {
+                            pageHTML += "<div style='text-align: center'><div class='layui-btn-group'>"
+
+                            pageHTML +=	"<button type='button' onclick='getBanArticles(("
+                            pageHTML +=	pageNum-1
+                            pageHTML +=	"))' class='layui-btn ";
+                            if (1 == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML +=	" '>上一页</button>";
+
+                            pageHTML +=	"<button type='button' onclick='getBanArticles(("
+                            pageHTML +=	1
+                            pageHTML +=	"))' class='layui-btn ";
+                            if (1 == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML +=	" '>首页</button>";
+
+                            pageHTML += "<button type='button' class='layui-btn layui-btn-disabled'>" + pageNum + "</button>";
+
+                            for (pageNum1; pageNum1 < btnNum; pageNum1++) {
+                                pageHTML += "<button type='button' onclick='getBanArticles(" ;
+                                pageHTML +=	pageNum1;
+                                pageHTML +=	")' class='layui-btn'>" + pageNum1 + "</button>";
+                                i = i + 1;
+                                if (i > 4) {
+                                    break;
+                                }
+                            }
+                            pageHTML += "<button type='button' class='layui-btn '>" + "..." + "</button>";
+                            pageHTML += "<button type='button' onclick='getBanArticles((";
+                            pageHTML += btnNum;
+                            pageHTML += "))'";
+                            pageHTML += "class='layui-btn ";
+                            if (btnNum == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML += " '>尾页 </button>";
+                            pageHTML += "<button type='button' onclick='getBanArticles(("
+                            pageHTML +=pageNum+1;
+                            pageHTML +="))' class='layui-btn"
+                            if (btnNum == pageNum) {
+                                pageHTML += " layui-btn-disabled";
+                            }
+                            pageHTML += " '>下一页</button></div></div>";}
+
+
+
+                        pageHTML += "</div>";
+
+
+                        active.tabDelete("removeBan1");
+                        active.tabAdd(title,pageHTML,"removeBan1");
+                        active.tabChange("removeBan1");
+                    }
+                }
+
+            });
+        }
         var tablePage = laypage.render({
             elem: 'test1'
             ,count: 1000
@@ -264,36 +839,7 @@
             }
         });
 
-        //渲染
-        var treeTest = tree.render({
-            elem: '#treeTest'
-            ,data: [{
-                title: '成都' //一级菜单
-                ,children: [{
-                    title: '金牛区' //二级菜单
-                    ,children: [{
-                        title: '环球广场' //三级菜单
-                        ,children: [{
-                            title: '爱达乐' //三级菜单
-                            //…… //以此类推，可无限层级
-                        }]
-                    }]
-                }]
-            },{
-                title: '重庆'
-            }]
-            ,click: function(obj){
-                console.log(obj.data); //得到当前点击的节点数据
-                console.log(obj.state); //得到当前节点的展开状态：open、close、normal
-                console.log(obj.elem); //得到当前节点元素
-                console.log(obj.data.children); //当前节点下是否有子节点
-            }
-            ,oncheck: function(obj){
-                console.log(obj.data); //得到当前点击的节点数据
-                console.log(obj.checked); //得到当前节点的展开状态：open、close、normal
-                console.log(obj.elem); //得到当前节点元素
-            }
-        });
+
 
         carousel.render({
             elem: '#carouse'

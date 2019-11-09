@@ -8,4 +8,5 @@ public interface UtilService {
     public void getProfilePhoto(OutputStream os);
     public String uploadImage(MultipartFile file);
     public void getImage(OutputStream os,String imageName);
+    public void showPhoto(OutputStream os,String imageName);
 }
