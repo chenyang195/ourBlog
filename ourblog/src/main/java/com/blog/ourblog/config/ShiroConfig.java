@@ -41,6 +41,7 @@ public class ShiroConfig {
         //放行静态资源
         filterMap.put("/layui/**","anon");
         filterMap.put("/css/**","anon");
+        filterMap.put("/js/**","anon");
         filterMap.put("/release/**","anon");
         filterMap.put("/wangEditor/**","anon");
 
@@ -82,6 +83,7 @@ public class ShiroConfig {
         filterMap.put("/banArt","perms[admin:administrate]");
         filterMap.put("/getBan","perms[admin:administrate]");
         filterMap.put("/removeBan","perms[admin:administrate]");
+        filterMap.put("/druid/*","perms[admin:administrate]");
 
 
         filterMap.put("/*","user");

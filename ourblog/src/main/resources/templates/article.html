@@ -110,6 +110,43 @@
 						}
 					}
 				});
+
+				$.ajax({
+
+					url:"/getMsgInfo",
+					async:true,
+					type:'post',
+					success: function (data) {
+						if (data==""){
+
+							return false;
+						}
+						dataJSON = JSON.parse(data);
+						var sysNum = parseInt(dataJSON.sysNum);
+						var replyNum =parseInt(dataJSON.replyNum);
+						var personalNum =parseInt(dataJSON.personalNum);
+						var count = sysNum +replyNum+personalNum;
+
+						if(count>0){
+							$(".count-p").append("<span class='layui-badge'>"+count+"</span>");
+							$(".d1").children("a").append("<span class='layui-badge'>"+count+"</span>");
+						}
+						if (sysNum>0) {
+							$(".d2").children("a").append("<span class='layui-badge'>"+sysNum+"</span>");
+						}
+						if (replyNum>0) {
+							$(".d3").children("a").append("<span class='layui-badge'>"+replyNum+"</span>");
+						}
+						if (personalNum>0) {
+							$(".d4").children("a").append("<span class='layui-badge'>"+personalNum+"</span>");
+						}
+
+					},
+					error:function () {
+						alert("暂时无法获取消息！");
+					}
+
+				});
 			}
 		</script>
 	</head>
@@ -130,17 +167,19 @@
 						<li  shiro:user="" class="layui-nav-item lay-unselect=">
 							<a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
 						</li>
-						<li  shiro:user="" class="layui-nav-item lay-unselect=">
+						<li  shiro:user="" class="layui-nav-item lay-unselect=" onload="getMsgInfo(this)">
 
-							<a href="javascript:;">
-								<img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+							<a href="javascript:;" class="count-p">
+								<img src="/getProfilePhoto" class="layui-nav-img">个人中心
+								<span class="layui-nav-more"></span>
+
 							</a>
 							<dl class="layui-nav-child layui-anim layui-anim-upbit">
-								<dd><a href="/yourself">个人中心</a></dd>
-								<dd><a href="">私信</a></dd>
-								<dd><a href="">回复我的</a></dd>
-								<dd><a href="">系统消息</a></dd>
-								<dd><a href="/logoutme">退出登录</a></dd>
+								<dd class="d1"><a href="/yourself">个人中心</a></dd>
+								<dd class="d2"><a href="/yourself?target=sys">系统消息</a></dd>
+								<dd class="d3"><a href="/yourself?target=re">回复我的</a></dd>
+								<dd class="d4"><a href="/yourself?target=pe">私信</a></dd>
+								<dd class="d5"><a href="/logoutme">退出登录</a></dd>
 							</dl>
 						</li>
 					</ul>

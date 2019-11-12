@@ -129,7 +129,7 @@ public class UserController {
 
         userService.updateLocation(addr,username);
 
-        return "redirect:" + savedRequest.getRequestUrl();
+        return "index";
 
     }
     @ResponseBody

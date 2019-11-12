@@ -1,6 +1,7 @@
 package com.blog.ourblog.service.impl;
 
 
+import com.blog.ourblog.constant.Constant;
 import com.blog.ourblog.entity.LoginHistory;
 import com.blog.ourblog.entity.User;
 import com.blog.ourblog.mapper.UserMapper;
@@ -24,6 +25,9 @@ import java.util.Map;
 
 public class UserServiceimpl implements UserService {
 
+    @Autowired
+    private Constant constant;
+
     @Resource
     private UserMapper userMapper ;
     @Autowired
@@ -40,7 +44,7 @@ public class UserServiceimpl implements UserService {
 
     public Map addUser(User user) {
         //设置默认头像
-        String defaultImageURL = "/home/ubuntu/picDB/image/default.jpeg";
+        String defaultImageURL =constant.getSource()+ "/default.jpeg";
         user.setImageURL(defaultImageURL);
         Map<String,String> map = new HashMap<>();
         //转换密码为加密后的

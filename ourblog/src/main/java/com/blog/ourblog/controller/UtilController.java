@@ -1,6 +1,7 @@
 package com.blog.ourblog.controller;
 
 import ch.qos.logback.core.util.FileUtil;
+import com.blog.ourblog.constant.Constant;
 import com.blog.ourblog.entity.EditorImageInfo;
 import com.blog.ourblog.entity.Pic;
 import com.blog.ourblog.mapper.PicMapper;
@@ -31,7 +32,8 @@ import java.util.*;
 
 @Controller
 public class UtilController {
-
+    @Autowired
+    private Constant constant;
     @Resource
     PicMapper picMapper;
     @Autowired
@@ -60,7 +62,7 @@ public class UtilController {
     public Object upLoad(MultipartHttpServletRequest multipartHttpServletRequest){
 
         // 图片存储路径
-        String path = "/home/ubuntu/picDB/image";
+        String path = constant.getSource();
         // 返回值
         HashMap map = new HashMap();
         List<String> data = new ArrayList<>();

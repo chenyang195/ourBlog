@@ -1,5 +1,6 @@
 package com.blog.ourblog.service.impl;
 
+import com.blog.ourblog.constant.Constant;
 import com.blog.ourblog.entity.User;
 import com.blog.ourblog.mapper.UserMapper;
 import com.blog.ourblog.service.UtilService;
@@ -8,6 +9,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,8 @@ import java.util.UUID;
 
 @Service
 public class UtilServiceImpl implements UtilService {
+    @Autowired
+    private Constant constant;
     @Resource
     UserMapper userMapper;
     @Override
@@ -42,7 +46,7 @@ public class UtilServiceImpl implements UtilService {
         Logger logger = LoggerFactory.getLogger(getClass());
 
         //本地使用,上传位置
-        String rootPath = "/home/ubuntu/picDB/image";
+        String rootPath = constant.getSource();
 
         String filename = file.getOriginalFilename();
 
@@ -80,7 +84,7 @@ public class UtilServiceImpl implements UtilService {
 
     @Override
     public void showPhoto(OutputStream os, String imageName) {
-        String path = "picDB/profilePhoto/"+imageName;
+        String path = "picDB/image/"+imageName;
 
         try {
             ImageToIO.getIO(path,os);

@@ -224,9 +224,47 @@
             });
 
         }
+        function getMsg() {
+            $.ajax({
+
+                url:"/getMsgInfo",
+                async:true,
+                type:'post',
+                success: function (data) {
+                    if (data==""){
+
+                        return false;
+                    }
+                    dataJSON = JSON.parse(data);
+                    var sysNum = parseInt(dataJSON.sysNum);
+                    var replyNum =parseInt(dataJSON.replyNum);
+                    var personalNum =parseInt(dataJSON.personalNum);
+                    var count = sysNum +replyNum+personalNum;
+
+                    if(count>0){
+                        $(".count-p").append("<span class='layui-badge'>"+count+"</span>");
+                        $(".d1").children("a").append("<span class='layui-badge'>"+count+"</span>");
+                    }
+                    if (sysNum>0) {
+                        $(".d2").children("a").append("<span class='layui-badge'>"+sysNum+"</span>");
+                    }
+                    if (replyNum>0) {
+                        $(".d3").children("a").append("<span class='layui-badge'>"+replyNum+"</span>");
+                    }
+                    if (personalNum>0) {
+                        $(".d4").children("a").append("<span class='layui-badge'>"+personalNum+"</span>");
+                    }
+
+                },
+                error:function () {
+                    alert("暂时无法获取消息！");
+                }
+
+            });
+        }
     </script>
 </head>
-<body class="layui-layout-body">
+<body class="layui-layout-body" onload="getMsg()">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header layui-bg-black">
         <div class="layui-logo"><i class="layui-icon layui-icon-app" style="font-size: 30px; color: #fff1fd;"></i>
@@ -236,7 +274,7 @@
         <ul class="layui-nav layui-layout-left" lay-filter="">
             <li class="layui-nav-item"><a href="/">首页</a></li>
             <li class="layui-nav-item"><a href="/hotArticle">最热文章</a></li>
-            <li class="layui-nav-item"><a href="/newArticleS">最新发布</a></li>
+            <li class="layui-nav-item"><a href="/newArticle">最新发布</a></li>
             <li shiro:hasPermission="admin:administrate" class="layui-nav-item layui-this"><a href="/admin">后台管理</a></li>
         </ul>
 
@@ -245,16 +283,19 @@
             <li  shiro:user="" class="layui-nav-item lay-unselect=">
                 <a href="/editor"target="_Blank"><div class="layui-icon layui-icon-edit">写文章</div></a>
             </li>
-            <li  shiro:user="" class="layui-nav-item lay-unselect=">
-                <a href="javascript:;">
-                    <img src="/getProfilePhoto" class="layui-nav-img">个人中心<span class="layui-nav-more"></span>
+            <li  shiro:user="" class="layui-nav-item lay-unselect=" onload="getMsgInfo(this)">
+
+                <a href="javascript:;" class="count-p">
+                    <img src="/getProfilePhoto" class="layui-nav-img">个人中心
+                    <span class="layui-nav-more"></span>
+
                 </a>
                 <dl class="layui-nav-child layui-anim layui-anim-upbit">
-                    <dd><a href="/yourself">个人中心</a></dd>
-                    <dd><a href="">私信</a></dd>
-                    <dd><a href="">回复我的</a></dd>
-                    <dd><a href="">系统消息</a></dd>
-                    <dd><a href="/logoutme">退出登录</a></dd>
+                    <dd class="d1"><a href="/yourself">个人中心</a></dd>
+                    <dd class="d2"><a href="/yourself?target=sys">系统消息</a></dd>
+                    <dd class="d3"><a href="/yourself?target=re">回复我的</a></dd>
+                    <dd class="d4"><a href="/yourself?target=pe">私信</a></dd>
+                    <dd class="d5"><a href="/logoutme">退出登录</a></dd>
                 </dl>
             </li>
         </ul>
@@ -336,6 +377,7 @@
                                         if(parseInt(data)>0){
                                             alert("操作成功！");
                                             btn.attr("disabled","disabled");
+                                            btn.addClass("layui-btn-disabled");
                                         }else {
                                             alert("服务器发生了一些问题，请稍后再试，或者联系后端人员！")
                                         }
@@ -349,8 +391,10 @@
                             });
 
                             function activeButton(textInput) {
-                                $(textInput).parent().parent().children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
-
+                                var btn =  $(textInput).parent().parent().children(".rotation-hyperlink-span").children(".rotation-hyperlink-active");
+                                //$(textInput).parent().parent().children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+                                $(btn).attr("disabled",false);
+                                $(btn).removeClass("layui-btn-disabled")
                             }
 
                             function replaceImg(thisImg){
@@ -387,6 +431,7 @@
 
                                                 thisImg.src = data.data;
                                                 $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
+                                                $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").removeClass("layui-btn-disabled");
                                             }
                                         }
                                     })
@@ -418,6 +463,9 @@
                         <dd><a href="javascript:;" id="manageHeat">热度管理</a></dd>
 
                     </dl>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a href="/druid/" target="_blank" >Druid监控</a>
                 </li>
 
             </ul>
@@ -524,20 +572,20 @@
                             addHtml+=val.imageSrc;
                             addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' onchange='activeButton(this)' value='" ;
                             addHtml+=val.hyperlink;
-                            addHtml+="' /></span><span class='rotation-hyperlink-span'><input type='button' class='rotation-hyperlink-active' value='修改'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                            addHtml+="' /></span><span class='rotation-hyperlink-span'><button class='rotation-hyperlink-active layui-btn  layui-btn-disabled'  disabled='disabled' style='margin-left: 5px' id=' " ;
                             addHtml+=val.id;
-                            addHtml+="'/></span><span><input type='button' class='rotation-delete' value='删除' style='font-size: 1.5625rem;' id='";
+                            addHtml+="'>修改</button></span><span><button class='rotation-delete layui-btn ' style='margin-left: 5px' id='";
                             addHtml+=val.id;
-                            addHtml+="' /> </span></div></div>"
+                            addHtml+="' >删除</button> </span></div></div>"
                         })
                         addHtml+="<div class='rotation'><div class='rotation-title'>新增：</div>";
                         addHtml+="<div><hr/><br/><div class='show-rotations-img'><img class='rotation-img' src='";
                         addHtml+="/getImage?imageName=daitianjia.jpg";
                         addHtml+="' onclick='replaceImg(this)'/></div><div class='rotation-hyperlink'><span class='rotation-hyperlink-link'>链接地址：<input type='text' class='rotation-input-text' value='" ;
                         addHtml+="#";
-                        addHtml+="' /></span><span class='rotation-hyperlink-span'><input  class='rotation-hyperlink-active' type='button' value='添加'disabled='disabled' style='font-size: 1.5625rem;' id=' " ;
+                        addHtml+="' /></span><span class='rotation-hyperlink-span'><button class='rotation-hyperlink-active  layui-btn  layui-btn-disabled' style='margin-left: 5px' disabled='disabled'  id=' " ;
                         addHtml+="unknow";
-                        addHtml+="'/></span></div></div></div>";
+                        addHtml+="'>添加</button></span></div></div></div>";
                         //$("#tadContent").append(addHtml);
                         active.tabDelete("rotation1");
                         active.tabAdd(title1,addHtml,"rotation1");
