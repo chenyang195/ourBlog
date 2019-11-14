@@ -62,7 +62,7 @@ public class UtilController {
     public Object upLoad(MultipartHttpServletRequest multipartHttpServletRequest){
 
         // 图片存储路径
-        String path = constant.getSource();
+        //String path = constant.getSource();
         // 返回值
         HashMap map = new HashMap();
         List<String> data = new ArrayList<>();
@@ -100,7 +100,7 @@ public class UtilController {
                 String newFileName = UUID.randomUUID().toString().replaceAll("\\-", "")+extName;
                 logger.info(username+"上传了"+newFileName);
                 // 保证 文件夹存
-                File fileDir = new File(path);
+                File fileDir = new File("/home/ubuntu/picDB/image");
                 if (!fileDir.exists()){
                     fileDir.mkdirs();
                 }

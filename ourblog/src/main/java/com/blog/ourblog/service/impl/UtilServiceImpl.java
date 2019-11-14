@@ -46,7 +46,7 @@ public class UtilServiceImpl implements UtilService {
         Logger logger = LoggerFactory.getLogger(getClass());
 
         //本地使用,上传位置
-        String rootPath = constant.getSource();
+        //String rootPath = constant.getSource();
 
         String filename = file.getOriginalFilename();
 
@@ -57,7 +57,7 @@ public class UtilServiceImpl implements UtilService {
         String uuidStr = uuid.toString().replaceAll("\\-", "");
         String newFilename = uuidStr+suffix;
         //目标文件
-        File descFile = new File(rootPath  + newFilename);
+        File descFile = new File("/home/ubuntu/picDB/image/"  + newFilename);
         try {
             file.transferTo(descFile);
         } catch (Exception e) {
