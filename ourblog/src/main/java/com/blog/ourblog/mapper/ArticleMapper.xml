@@ -243,5 +243,39 @@
         article_id = #{article.articleId}
 
     </update>
+    <select id="getPersonArt" resultType="com.blog.ourblog.entity.Article">
+        select
+        article_id as articleId,
+        username as userName,
+        title,
+        synopsis,
+        update_time as updateTime,
+        star_num as starNum,
+        praise_num as praiseNum,
+        tread_num as treadNum,
+        hot_index as hotIndex,
+        is_ban as isBan,
+        is_stick as isStick
+        from
+        t_article
+        where
+        username = #{userName} and is_ban = #{sign}
+
+    </select>
+    <delete id="deleteArticle" >
+        delete from
+        t_article
+        where
+        article_id = #{articleId}
+    </delete>
+    <update id="publishArticle" >
+        UPDATE t_article
+         SET
+        is_ban = 0,
+        update_time = #{timestamp}
+        WHERE
+        article_id = #{articleId}
+
+    </update>
 
 </mapper>

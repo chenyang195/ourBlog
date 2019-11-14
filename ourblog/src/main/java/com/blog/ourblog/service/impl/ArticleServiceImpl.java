@@ -9,8 +9,10 @@ import com.blog.ourblog.mapper.IconMapper;
 import com.blog.ourblog.service.ArticleService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +70,13 @@ public class ArticleServiceImpl implements ArticleService {
         article.setContent(content);
         article.setSynopsis(synopsis);
         article.setTitle(articleTitle);
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
+            return -1;
+        }
         article.setUserName(userName);
         article.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
 
@@ -127,8 +135,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Integer changeIcon(Integer articleId, Integer sign) {
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        if(userName==null){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
             return -1;
         }
         Icon icon = new Icon();
@@ -148,6 +159,80 @@ public class ArticleServiceImpl implements ArticleService {
 
 
 
+    }
+
+    @Override
+    public List<Article> getPersonArt(Integer sign) {
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
+            return null;
+        }
+        return articleMapper.getPersonArt(sign,userName);
+    }
+
+    @Override
+    public Integer operateArt(Integer articleId, Integer sign) {
+        Article article = articleMapper.getArticleInformation(articleId);
+        if (article==null){
+            return -1;
+        }
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
+            return -1;
+        }
+        if (!userName.equals(article.getUserName())){
+            return -1;
+        }
+        if (sign==1){
+            return articleMapper.deleteArticle(articleId);
+        }
+        if (sign==2){
+            Timestamp timestamp =new java.sql.Timestamp(new java.util.Date().getTime());
+            return articleMapper.publishArticle(articleId,timestamp);
+        }
+        return -1;
+    }
+
+    @Override
+    public Integer updateArticle(String articleTitle, String synopsis, String content,String articleId) {
+        Integer intArticleId = Integer.parseInt(articleId.trim());
+        if (intArticleId==null){
+            return -1;
+        }
+        Article article = articleMapper.getArticleInformation(intArticleId);
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
+            return -1;
+        }
+        if (!userName.equals(article.getUserName())){
+            return  -1;
+        }
+        article.setContent(content);
+        article.setSynopsis(synopsis);
+        article.setTitle(articleTitle);
+        article.setUpdateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
+
+
+        Integer result =articleMapper.updateArticle(article);
+
+
+        if (result==null){
+            result = -1;
+        }
+        if (result>0){
+            result = article.getArticleId();
+        }
+
+        return result;
     }
 
     void updateArticleIcon(Integer articleId,Integer sign){

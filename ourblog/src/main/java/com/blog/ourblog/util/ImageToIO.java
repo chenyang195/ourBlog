@@ -12,6 +12,7 @@ import java.io.OutputStream;
 
 public class ImageToIO {
     public static void getIO(String filePath, OutputStream os) throws IOException {
+
         File out = new File(filePath);
         //将图片写入ImageIO流
 

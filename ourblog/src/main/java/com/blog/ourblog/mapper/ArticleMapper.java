@@ -4,6 +4,7 @@ import com.blog.ourblog.entity.Article;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -25,5 +26,8 @@ public interface ArticleMapper {
     public Integer cancelStickArticle(@Param("articleId")Integer articleId);
     public Integer draftArticle(@Param("articleId")Integer articleId);
     public Integer updateArticleInformation(@Param("article") Article article);
+    public List<Article> getPersonArt(@Param("sign")Integer sign,@Param("userName")String userName);
+    public Integer deleteArticle(@Param("articleId")Integer articleId);
+    public Integer publishArticle(@Param("articleId")Integer articleId,@Param("timestamp") Timestamp timestamp);
 
 }

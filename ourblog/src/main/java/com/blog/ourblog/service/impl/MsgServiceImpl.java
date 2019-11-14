@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,17 +17,17 @@ public class MsgServiceImpl implements MsgService {
     @Resource
     MsgMapper msgMapper;
     @Override
-    public Msgs getMsgs(Integer pageNum, Integer type, Integer isRead) {
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        if (userName==null){
+    public List<Msg> getMsgs(Integer type, Integer isRead) {
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
             return null;
         }
-        Integer pageHead = (pageNum-1)*10;
-        Msgs msgs = new Msgs();
-        msgs.setMsgList(msgMapper.getMsg(userName,pageHead,10,type,isRead));
-        msgs.setMsgNum(msgMapper.getMsgNum(userName,type,isRead));
 
-        return msgs;
+        return msgMapper.getMsg(userName,0,100,type,isRead);
+
     }
 
 
@@ -34,9 +35,16 @@ public class MsgServiceImpl implements MsgService {
     @Override
     public Integer sendMsg(String listener,Integer type,String content) {
 
-        String sendBy = SecurityUtils.getSubject().getPrincipal().toString();
-        if (sendBy==null&&type!=1){
+
+        if (null==SecurityUtils.getSubject().getPrincipal()&&type!=1){
             return -1;
+        }
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String sendBy;
+        if (principal!=null){
+            sendBy = principal.toString();
+        }else {
+            sendBy="系统";
         }
         if (sendBy.equals(listener)&&type!=1){
             return 3;
@@ -47,7 +55,7 @@ public class MsgServiceImpl implements MsgService {
         msg.setType(type);
         msg.setContent(content);
         msg.setCreateTime(new java.sql.Timestamp(new java.util.Date().getTime()));
-        System.out.println(msg);
+
         msgMapper.addMsg(msg);
         if(msg.getId()==null){
             msg.setId(-1);
@@ -57,8 +65,11 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public Map<String, Integer> getUserMsgInfo() {
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        if (userName ==null){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
             return null;
         }
         Map<String,Integer> msgInfo = new HashMap<>();
@@ -99,7 +110,22 @@ public class MsgServiceImpl implements MsgService {
         if (id <0){
             return -1;
         }
-        return msgMapper.readMsg(id);
+        Msg msg = msgMapper.getMsgById(id);
+        if(msg==null){
+            return -1;
+        }
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
+            return -1;
+        }
+        if (msg.getListener().equals(userName)) {
+            return msgMapper.readMsg(id);
+        }else {
+            return -1;
+        }
     }
 
     @Override
@@ -112,18 +138,25 @@ public class MsgServiceImpl implements MsgService {
 
     @Override
     public Integer readAll(Integer type) {
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        if (userName ==null){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
             return null;
         }
+
         Integer res = msgMapper.readAll(userName,type);
         return res;
     }
 
     @Override
     public Integer deleteAll(Integer type, Integer isRead) {
-        String userName = SecurityUtils.getSubject().getPrincipal().toString();
-        if (userName ==null){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        String userName;
+        if (principal!=null){
+            userName=principal.toString();
+        }else {
             return null;
         }
         Integer res = msgMapper.deleteAll(userName,type,isRead);

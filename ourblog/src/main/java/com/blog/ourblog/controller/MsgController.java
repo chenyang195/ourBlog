@@ -1,6 +1,7 @@
 package com.blog.ourblog.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.blog.ourblog.entity.Msg;
 import com.blog.ourblog.entity.Msgs;
 import com.blog.ourblog.service.MsgService;
 import org.apache.ibatis.annotations.Param;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -21,8 +23,9 @@ public class MsgController {
     @ResponseBody
     @RequestMapping("/getMsgInfo")
     public String getMsgInfo(){
-        String name = SecurityUtils.getSubject().getPrincipal().toString();
-        if (name==null){
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+
+        if (principal==null){
             return null;
         }
         Map<String,Integer> msgInfo ;
@@ -33,10 +36,13 @@ public class MsgController {
     }
     @ResponseBody
     @RequestMapping("/getMsgs")
-    protected String getMsgs(@RequestParam("type")String type,@RequestParam("isRead")String isRead,@RequestParam("pageNum")String pageNum){
-        Msgs msgs = new Msgs();
-        msgs = msgService.getMsgs(Integer.parseInt(pageNum.trim()),Integer.parseInt(type.trim()),Integer.parseInt(isRead.trim()));
-        return JSON.toJSONString(msgs);
+    protected String getMsgs(@RequestParam("type")String type,@RequestParam("isRead")String isRead){
+
+        List<Msg> msgs = msgService.getMsgs(Integer.parseInt(type.trim()), Integer.parseInt(isRead.trim()));
+        Map<String,List<Msg>> map = new HashMap<>();
+        map.put("msgList",msgs);
+
+        return JSON.toJSONString(map);
 
     }
     @ResponseBody

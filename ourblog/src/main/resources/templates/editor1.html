@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="Thymeleaf">
+<head>
+    <meta charset="UTF-8">
+    <title>wangEditor demo</title>
+
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+</head>
+<body>
+<p id="articleId01"th:text="${article.articleId}" hidden></p>
+<p id="articleId02"th:text="${article.content}" hidden></p>
+<div style="width: 100%;">
+    <div style="margin: 20px;">
+        <p style="font-size: 20px;">文章题目</p>
+        <input type="text" name="title" id ="title1" th:value ="${article.title}" maxlength="30" style="width: 50%;height: 30px;font-size: 30px;border-radius: 5px;" /><br />
+        <p style="font-size: 20px;">文章简介</p>
+        <textarea name="introduction" id="intr1" maxlength="200"
+                  style="width: 100%;height: 90px;font-size: 25px;OVERFLOW:visible;border-radius: 5px;" th:text="${article.synopsis}"></textarea>
+        <p style="font-size: 20px;">文章内容</p>
+    </div>
+</div>
+<div id="editor">
+    <p>加载富文本编辑器。。。。</p>
+</div>
+<!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+<script type="text/javascript" src="release/wangEditor.js"></script>
+<script type="text/javascript">
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+    editor.customConfig.uploadImgServer = '/uploadImage';
+    editor.create();
+    editor.txt.html($("#articleId02").text())
+
+</script>
+<button id="btn1" class="btn-up">提交</button>
+<button id="btn2" class="btn-up">存为草稿</button>
+</body>
+<script type="text/javascript">
+
+
+    $(".btn-up").click(function(){
+
+
+        var title = $("#title1").val();
+        if (title==""){
+            alert("请填写标题!");
+            return;
+        }
+
+        var synopsis =$("#intr1").val();
+        if (synopsis==""){
+            alert("请填写简介!");
+            return;
+        }
+
+        var content = editor.txt.html();
+        if (content=="<p></p>"){
+            alert("请填写内容!");
+            return;
+        }
+        this.disabled = true;
+        var sign = "0";
+        if(this.id=="btn2"){
+            sign = "2";
+        }
+        var articleId = $("#articleId01").text()
+        var jsonEssay =  {
+            "articleId":articleId,
+            "title": title,
+            "synopsis": synopsis,
+            "content" : content,
+            "sign":sign
+        }
+        var msg = "";
+        $.ajax({
+            url:"/pushEssay",
+            data:jsonEssay,
+            async:false,
+            type:'post',
+            success: function (data) {
+                msg = data;
+
+            }
+
+        });
+        if (msg!="-1"){
+            alert("提交成功！")
+            var url = "/showArticle?articleId="+msg;
+            window.location.href=url;
+
+        }else {
+            $(".btn-up").disabled = false;
+            alert("提交失败请稍后再试！");
+        }
+
+    });
+</script>
+</html>

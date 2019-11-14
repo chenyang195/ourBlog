@@ -3,10 +3,11 @@ package com.blog.ourblog.service;
 import com.blog.ourblog.entity.Msg;
 import com.blog.ourblog.entity.Msgs;
 
+import java.util.List;
 import java.util.Map;
 
 public interface MsgService {
-    public Msgs getMsgs(Integer pageNum,Integer type,Integer isRead);
+    public List<Msg> getMsgs(Integer type, Integer isRead);
     public Integer sendMsg(String listener,Integer type,String content);
     public Map<String,Integer> getUserMsgInfo();
     public Integer deleteMsg(Integer id);

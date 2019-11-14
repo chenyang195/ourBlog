@@ -9,6 +9,7 @@ import com.blog.ourblog.service.IPService;
 import com.blog.ourblog.service.RoleService;
 import com.blog.ourblog.service.UserService;
 import com.blog.ourblog.util.MD5Encrypt;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,7 +103,8 @@ public class UserServiceimpl implements UserService {
         User user = userMapper.findByUsername(userName);
         String imageURL = user.getImageURL();
         String[] strings = StringUtils.split(imageURL,"///");
-        user.setImageURL("/showPhoto?imageName="+strings[2]);
+        Integer len = strings.length;
+        user.setImageURL("/showPhoto?imageName="+strings[len-1]);
         model.addAttribute("user",user);
     }
 }

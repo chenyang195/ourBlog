@@ -155,6 +155,7 @@ public class UtilController {
 
     @RequestMapping("/showPhoto")
     public void showPhoto(@Param("imageName")String imageName, HttpServletResponse response){
+
         BufferedOutputStream bos;
         try {
             bos = new BufferedOutputStream( response.getOutputStream());

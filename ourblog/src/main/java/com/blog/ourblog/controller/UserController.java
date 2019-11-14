@@ -2,6 +2,8 @@ package com.blog.ourblog.controller;
 
 
 import com.blog.ourblog.entity.User;
+import com.blog.ourblog.log.MyLog;
+import com.blog.ourblog.service.MsgService;
 import com.blog.ourblog.service.UserService;
 
 import com.blog.ourblog.util.VerificationCodeUtil;
@@ -13,6 +15,7 @@ import org.apache.shiro.subject.Subject;
 
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +42,10 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private MsgService msgService;
 
-
+    @MyLog("注册")
     @RequestMapping("/reg")
     public String reg(@RequestParam("username")String username, @RequestParam("password")String password,@RequestParam("password1")String password1, @RequestParam("verify")String verify,Model model,HttpServletRequest request){
 
@@ -48,7 +53,7 @@ public class UserController {
 
 
         if (session.getAttribute("verValue")==null){
-            System.out.println(session.getAttribute("verValue"));
+
             return "user/register";
         }
 
@@ -76,10 +81,12 @@ public class UserController {
             model.addAttribute("msg",info.get("msg"));
             return "user/register";
         }
+
          model.addAttribute("msg",info.get("msg"));
+        msgService.sendMsg(username,1,"你已注册成功，欢迎你的加入！");
          return "/login";
     }
-
+    @MyLog("登录")
     @RequestMapping("/log")
     public String log(@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("verify")String verify, Model model, HttpServletRequest request){
 
@@ -153,6 +160,7 @@ public class UserController {
 
 
     }
+    @MyLog("登出")
     @RequestMapping("/logoutme")
     public void logout(HttpServletResponse response,HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
@@ -179,8 +187,10 @@ public class UserController {
         String userExist = userService.checkUserExist(username);
         return userExist;
     }
+
     @RequestMapping("/user")
-    private String user(@RequestParam("userName")String userName,Model model){
+    public String user(@RequestParam("userName")String userName,Model model){
+
         userService.showUser(userName,model);
         return "showUser";
     }

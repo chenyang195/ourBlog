@@ -19,5 +19,8 @@ public interface ArticleService {
     public ArticleInfos getHotArticleInfos(Integer pageHead,Integer pageSize);
     public ArticleInfos getNewArticleInfos(Integer pageHead,Integer pageSize);
     public Integer changeIcon(Integer articleId, Integer sign);
+    public List<Article>getPersonArt(Integer sign);
+    public Integer operateArt(Integer articleId, Integer sign);
+    public Integer updateArticle(String articleTitle,String synopsis,String content,String articleId);
 
 }
