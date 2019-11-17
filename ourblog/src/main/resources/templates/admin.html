@@ -428,8 +428,9 @@
                                         contentType:false,
                                         success:function(data){
                                             if (data != "") {
+                                                var strs=data.split("\"");
 
-                                                thisImg.src = data.data;
+                                                thisImg.src = strs[5];
                                                 $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").attr("disabled",false);
                                                 $(thisImg).parent().parent().children(".rotation-hyperlink").children(".rotation-hyperlink-span").children(".rotation-hyperlink-active").removeClass("layui-btn-disabled");
                                             }

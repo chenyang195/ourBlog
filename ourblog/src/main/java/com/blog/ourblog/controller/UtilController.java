@@ -1,6 +1,7 @@
 package com.blog.ourblog.controller;
 
 import ch.qos.logback.core.util.FileUtil;
+import com.alibaba.fastjson.JSON;
 import com.blog.ourblog.constant.Constant;
 import com.blog.ourblog.entity.EditorImageInfo;
 import com.blog.ourblog.entity.Pic;
@@ -59,80 +60,9 @@ public class UtilController {
     }
     @ResponseBody
     @RequestMapping("/uploadImage")
-    public Object upLoad(MultipartHttpServletRequest multipartHttpServletRequest){
+    public String uploadImage(MultipartHttpServletRequest multipartHttpServletRequest){
 
-        // 图片存储路径
-        //String path = constant.getSource();
-        // 返回值
-        HashMap map = new HashMap();
-        List<String> data = new ArrayList<>();
-        // 取得request中的所有文件名
-        Iterator<String> iterator = multipartHttpServletRequest.getFileNames();
-        // 遍历
-        while (iterator.hasNext()) {
-            // 取得上传文件
-            MultipartFile multipartFile = multipartHttpServletRequest.getFile(iterator.next());
-            if (multipartFile != null) {
-               String md5 = MD5Encrypt.getMd5(multipartFile);
-                Pic pic = picMapper.getPic(md5);
-                if (pic!=null){
-                    map.put("errno", 0);
-                    map.put("data", pic.getSrc());
-
-
-                    return map;
-                }
-
-
-                // 文件名
-                String fileName = multipartFile.getOriginalFilename();
-                // 获取文件拓展名
-                String extName = fileName.substring(fileName.lastIndexOf("."));
-
-                if (null==extName) {
-                    logger.error("文件后缀名称为空，文件可能有问题...");
-                    map.put("errno", 1);
-                    map.put("data", data);
-                    return map;
-                }
-                Subject subject = SecurityUtils.getSubject();
-                String username = subject.getPrincipal().toString();
-                String newFileName = UUID.randomUUID().toString().replaceAll("\\-", "")+extName;
-                logger.info(username+"上传了"+newFileName);
-                // 保证 文件夹存
-                File fileDir = new File("/home/ubuntu/picDB/image");
-                if (!fileDir.exists()){
-                    fileDir.mkdirs();
-                }
-                File file = new File(fileDir, newFileName);
-                // 拷贝文件流  到上面的文件
-                try {
-                    multipartFile.transferTo(file);
-                } catch (IOException e) {
-                    logger.error(e.getMessage());
-                    logger.error("无法写出");
-                    map.put("errno", 1);
-                    map.put("data", data);
-                    return map;
-                }
-                // 构建图片的可访问地址
-                String webUrl = "/getImage?imageName=" + newFileName;
-                pic = new Pic();
-                pic.setMd5(md5);
-                pic.setSrc(webUrl);
-                picMapper.addPic(pic);
-
-                logger.info("文件路径： {}", webUrl );
-                // 添加到数组中
-                data.add(webUrl);
-            }
-        }
-        // 返回前端需要的格式
-        map.put("errno", 0);
-        map.put("data", data);
-
-
-        return map;
+       return utilService.uploadImage(multipartHttpServletRequest);
 
     }
     @RequestMapping("/getImage")
