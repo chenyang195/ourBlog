@@ -64,7 +64,7 @@ public class ShiroConfig {
         filterMap.put("/newArticle","anon");
         filterMap.put("/showPhoto","anon");
         filterMap.put("/getRotation","anon");
-
+        filterMap.put("/information","anon");
 
 
         filterMap.put("/logoutme","user");

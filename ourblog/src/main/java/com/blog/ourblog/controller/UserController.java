@@ -19,6 +19,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,7 +48,7 @@ public class UserController {
 
     @MyLog("注册")
     @RequestMapping("/reg")
-    public String reg(@RequestParam("username")String username, @RequestParam("password")String password,@RequestParam("password1")String password1, @RequestParam("verify")String verify,Model model,HttpServletRequest request){
+    public String reg(@RequestParam("username")String username, @RequestParam("password")String password,@RequestParam("password1")String password1, @RequestParam("verify")String verify,HttpServletRequest request){
 
         HttpSession session = request.getSession();
 
@@ -61,12 +62,12 @@ public class UserController {
 
 
         if(!password.equals(password1)){
-            model.addAttribute("msg","两次密码不一致");
+            session.setAttribute("msg","两次密码不一致");
             return "user/register";
         }
 
         if(!(verify.equalsIgnoreCase(verValue))){
-            model.addAttribute("msg","验证码错误");
+            session.setAttribute("msg","验证码错误");
             return "user/register";
         }
 
@@ -78,17 +79,17 @@ public class UserController {
         //尝试注册
         Map info = userService.addUser(user);
         if(info.get("result").equals("-1")){
-            model.addAttribute("msg",info.get("msg"));
+            session.setAttribute("msg",info.get("msg"));
             return "user/register";
         }
 
-         model.addAttribute("msg",info.get("msg"));
+        session.setAttribute("msg",info.get("msg"));
         msgService.sendMsg(username,1,"你已注册成功，欢迎你的加入！");
          return "/login";
     }
     @MyLog("登录")
     @RequestMapping("/log")
-    public String log(@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("verify")String verify, Model model, HttpServletRequest request){
+    public String log(@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("verify")String verify, HttpServletRequest request){
 
 
         HttpSession session = request.getSession();
@@ -100,7 +101,7 @@ public class UserController {
         String verValue = session.getAttribute("verValue").toString();
 
         if(!(verify.equalsIgnoreCase(verValue))){
-            model.addAttribute("msg","验证码错误");
+            session.setAttribute("msg","验证码错误");
             return "/login";
         }
         //1.获取subject
@@ -120,14 +121,15 @@ public class UserController {
             subject.login(token);
         } catch (UnknownAccountException e) {
             //e.printStackTrace();
-            model.addAttribute("msg","用户名不存在");
+            session.setAttribute("msg","用户名不存在");
             return "/login";
         }catch (IncorrectCredentialsException e){
-            model.addAttribute("msg","密码错误");
+            session.setAttribute("msg","密码错误");
             return "/login";
         }
         if (savedRequest == null || savedRequest.getRequestUrl() == null) {
             userService.updateLocation(addr,username);
+            session.setAttribute("msg","");
             return "index";
 
 
@@ -194,5 +196,15 @@ public class UserController {
         userService.showUser(userName,model);
         return "showUser";
     }
-
+    @ResponseBody
+    @RequestMapping("/information")
+    public String information(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String msg = (String) session.getAttribute("msg");
+        if(msg==null){
+            msg="";
+        }
+        session.setAttribute("msg","");
+        return msg;
+    }
 }

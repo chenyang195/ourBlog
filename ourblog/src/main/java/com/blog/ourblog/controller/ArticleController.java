@@ -11,6 +11,7 @@ import com.blog.ourblog.service.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -24,21 +25,33 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 @Controller
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    RedisTemplate redisTemplate;
 
     @ResponseBody
     @RequestMapping("/getHomePage")
     public String getHomePage(){
-        Page page = articleService.getHomePage(0,5);
+        Object pageObj = redisTemplate.opsForValue().get("pageStr");
+        if (pageObj==null){
+            Page page = articleService.getHomePage(0,5);
+            String pageStr = JSON.toJSON(page).toString();
+            redisTemplate.opsForValue().set("pageStr",pageStr);
+            redisTemplate.expire("pageStr",10, TimeUnit.SECONDS);
 
-        return JSON.toJSON(page).toString();
+            return pageStr;
+        }else {
+            return pageObj.toString();
+
+        }
     }
-    @Transactional
+
     @ResponseBody
     @RequestMapping("/pushEssay")
     public String pushEssay(@RequestParam("title")String title, @RequestParam("synopsis")String synopsis, @RequestParam("content")String content, @RequestParam("sign")String sign, HttpServletRequest request){

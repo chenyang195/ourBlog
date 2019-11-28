@@ -86,13 +86,17 @@
 </div>
 
 </body>
-<script th:inline="javascript">
+<script >
+    $.ajax({
+        url: "/information",
+        async: true,
 
-    var msg= [[${msg}]];
-    if (msg != null){
-        alert(msg);
-    }
-
+        success: function (data) {
+            if (data != "") {
+                alert(data);
+            }
+        }
+    })
 
 </script>
 </html>
